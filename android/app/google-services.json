@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "838385417135",
+    "project_id": "chaumedia-a0626",
+    "storage_bucket": "chaumedia-a0626.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:838385417135:android:a15f3416f975b06deacd5a",
+        "android_client_info": {
+          "package_name": "com.personnel.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "838385417135-14kjubb8mqvqj20dj7e0o82aai34t7ul.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGPcv-9erooQPLf47jdUKl1DW8L1AQ3AA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "838385417135-14kjubb8mqvqj20dj7e0o82aai34t7ul.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "838385417135-572idbs7ofmmq9u1i1pn8rh4capbbpk1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.5chau.personnel"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
