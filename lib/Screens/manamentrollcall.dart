@@ -58,7 +58,6 @@ class _ManamentRollCall_ScreenState extends State<ManamentRollCall_Screen> {
             color: Color.fromARGB(255, 217, 228, 236),
             height: h * 0.05,
             child: Row(
-
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _buildCalendarDialogButton(),
@@ -84,7 +83,8 @@ class _ManamentRollCall_ScreenState extends State<ManamentRollCall_Screen> {
                                 ? context
                                         .watch<DetailRollCallUser_Provider>()
                                         .count_day_int_month() -
-                                    currentDay
+                                    currentDay +
+                                    1
                                 : checkseeCurrenday == false &&
                                         checkbetween == false
                                     ? context
@@ -124,7 +124,7 @@ class _ManamentRollCall_ScreenState extends State<ManamentRollCall_Screen> {
                                         child: Row(
                                           children: [
                                             Text(
-                                              '${Day_Format(context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? index + currentDay - 1 : checkseeCurrenday == false && checkbetween == false ? index : index + _startdate - 1]['day'].toString())}',
+                                              '${Day_Format(context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['day'].toString())}',
                                               style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 30,
@@ -140,7 +140,7 @@ class _ManamentRollCall_ScreenState extends State<ManamentRollCall_Screen> {
                                                   MainAxisAlignment.center,
                                               children: [
                                                 Text(
-                                                  '${Rank_Format(context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? index + currentDay - 1 : checkseeCurrenday == false && checkbetween == false ? index : index + _startdate - 1]['rollcall_id'].toString(), context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[index]['day'].toString())}', //thứ
+                                                  '${Rank_Format(context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['rollcall_id'].toString(), context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['day'].toString())}', //thứ
                                                   style: TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 12,
@@ -148,7 +148,7 @@ class _ManamentRollCall_ScreenState extends State<ManamentRollCall_Screen> {
                                                           FontWeight.bold),
                                                 ),
                                                 Text(
-                                                  "${monthyear_Format(context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? index + currentDay - 1 : checkseeCurrenday == false && checkbetween == false ? index : index + _startdate - 1]['rollcall_id'].toString())}",
+                                                  "${monthyear_Format(context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['rollcall_id'].toString())}",
                                                   style: TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 10),
@@ -159,38 +159,18 @@ class _ManamentRollCall_ScreenState extends State<ManamentRollCall_Screen> {
                                         ),
                                       ),
                                       context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[
-                                                  checkseeCurrenday == true
-                                                      ? index + currentDay - 1
-                                                      : index]['in1'] ==
+                                                  checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['in1'] ==
                                               null
                                           ? Container(
                                               padding: EdgeInsets.all(5),
                                               child: Text("Chưa điểm danh"))
                                           : context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[
-                                                          checkseeCurrenday == true
-                                                              ? index +
-                                                                  currentDay -
-                                                                  1
-                                                              : index]['in1'] !=
+                                                          checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['in1'] !=
                                                       null &&
                                                   context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[
-                                                          checkseeCurrenday == true &&
-                                                                  checkbetween ==
-                                                                      false
-                                                              ? index +
-                                                                  currentDay -
-                                                                  1
-                                                              : checkseeCurrenday ==
-                                                                          false &&
-                                                                      checkbetween == false
-                                                                  ? index
-                                                                  : index + _startdate - 1]['out1'] !=
+                                                          checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['out1'] !=
                                                       null &&
-                                                  context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false
-                                                          ? index + currentDay - 1
-                                                          : checkseeCurrenday == false && checkbetween == false
-                                                              ? index
-                                                              : index + _startdate - 1]['in2'] ==
+                                                  context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['in2'] ==
                                                       null
                                               ? Column(
                                                   children: [
@@ -199,22 +179,12 @@ class _ManamentRollCall_ScreenState extends State<ManamentRollCall_Screen> {
                                                                 .watch<
                                                                     DetailRollCallUser_Provider>()
                                                                 .data_Rollcall_MonthYear()[
-                                                            checkseeCurrenday ==
-                                                                    true
-                                                                ? index +
-                                                                    currentDay -
-                                                                    1
-                                                                : index]['in1'],
+                                                            checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['in1'],
                                                         place: context
                                                                 .watch<
                                                                     DetailRollCallUser_Provider>()
                                                                 .data_Rollcall_MonthYear()[
-                                                            checkseeCurrenday ==
-                                                                    true
-                                                                ? index +
-                                                                    currentDay -
-                                                                    1
-                                                                : index]['place_in1']),
+                                                            checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['place_in1']),
                                                     Item_Detaill_Rollcall(
                                                         time: context
                                                             .watch<
@@ -229,151 +199,50 @@ class _ManamentRollCall_ScreenState extends State<ManamentRollCall_Screen> {
                                                                 .watch<
                                                                     DetailRollCallUser_Provider>()
                                                                 .data_Rollcall_MonthYear()[
-                                                            checkseeCurrenday ==
-                                                                    true
-                                                                ? index +
-                                                                    currentDay -
-                                                                    1
-                                                                : index]['place_out1'])
+                                                            checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['place_out1'])
                                                   ],
                                                 )
-                                              : context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false
-                                                              ? index + currentDay - 1
-                                                              : checkseeCurrenday == false && checkbetween == false
-                                                                  ? index
-                                                                  : index + _startdate - 1]['in1'] !=
+                                              : context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['in1'] !=
                                                           null &&
-                                                      context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false
-                                                              ? index + currentDay - 1
-                                                              : checkseeCurrenday == false && checkbetween == false
-                                                                  ? index
-                                                                  : index + _startdate - 1]['out1'] !=
+                                                      context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['out1'] !=
                                                           null &&
-                                                      context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false
-                                                              ? index + currentDay - 1
-                                                              : checkseeCurrenday == false && checkbetween == false
-                                                                  ? index
-                                                                  : index + _startdate - 1]['in2'] !=
+                                                      context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['in2'] !=
                                                           null &&
-                                                      context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false
-                                                              ? index + currentDay - 1
-                                                              : checkseeCurrenday == false && checkbetween == false
-                                                                  ? index
-                                                                  : index + _startdate - 1]['out2'] ==
+                                                      context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['out2'] ==
                                                           null
                                                   ? Column(
                                                       children: [
                                                         Item_Detaill_Rollcall(
-                                                            time: context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true &&
-                                                                        checkbetween ==
-                                                                            false
-                                                                    ? index +
-                                                                        currentDay -
-                                                                        1
-                                                                    : checkseeCurrenday == false &&
-                                                                            checkbetween ==
-                                                                                false
-                                                                        ? index
-                                                                        : index + _startdate - 1]
+                                                            time: context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]
                                                                 ['in1'],
                                                             place: context
                                                                 .watch<
                                                                     DetailRollCallUser_Provider>()
-                                                                .data_Rollcall_MonthYear()[checkseeCurrenday ==
-                                                                        true &&
-                                                                    checkbetween ==
-                                                                        false
-                                                                ? index +
-                                                                    currentDay -
-                                                                    1
-                                                                : checkseeCurrenday == false &&
-                                                                        checkbetween ==
-                                                                            false
-                                                                    ? index
-                                                                    : index +
-                                                                        _startdate -
-                                                                        1]['place_in1']),
+                                                                .data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['place_in1']),
                                                         Item_Detaill_Rollcall(
                                                             time: context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[
-                                                                    checkseeCurrenday == true
-                                                                        ? index +
-                                                                            currentDay -
-                                                                            1
-                                                                        : index]
+                                                                    checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]
                                                                 ['out1'],
                                                             place: context
                                                                 .watch<
                                                                     DetailRollCallUser_Provider>()
-                                                                .data_Rollcall_MonthYear()[checkseeCurrenday ==
-                                                                        true &&
-                                                                    checkbetween ==
-                                                                        false
-                                                                ? index +
-                                                                    currentDay -
-                                                                    1
-                                                                : checkseeCurrenday ==
-                                                                            false &&
-                                                                        checkbetween ==
-                                                                            false
-                                                                    ? index
-                                                                    : index +
-                                                                        _startdate -
-                                                                        1]['place_out1']),
+                                                                .data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['place_out1']),
                                                         Item_Detaill_Rollcall(
-                                                            time: context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true &&
-                                                                        checkbetween ==
-                                                                            false
-                                                                    ? index +
-                                                                        currentDay -
-                                                                        1
-                                                                    : checkseeCurrenday == false &&
-                                                                            checkbetween ==
-                                                                                false
-                                                                        ? index
-                                                                        : index + _startdate - 1]
+                                                            time: context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]
                                                                 ['in2'],
                                                             place: context
                                                                 .watch<
                                                                     DetailRollCallUser_Provider>()
-                                                                .data_Rollcall_MonthYear()[checkseeCurrenday ==
-                                                                        true &&
-                                                                    checkbetween ==
-                                                                        false
-                                                                ? index +
-                                                                    currentDay -
-                                                                    1
-                                                                : checkseeCurrenday == false &&
-                                                                        checkbetween ==
-                                                                            false
-                                                                    ? index
-                                                                    : index +
-                                                                        _startdate -
-                                                                        1]['place_in2'])
+                                                                .data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['place_in2'])
                                                       ],
                                                     )
-                                                  : context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false
-                                                                  ? index + currentDay - 1
-                                                                  : checkseeCurrenday == false && checkbetween == false
-                                                                      ? index
-                                                                      : index + _startdate - 1]['in1'] !=
+                                                  : context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['in1'] !=
                                                               null &&
-                                                          context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false
-                                                                  ? index + currentDay - 1
-                                                                  : checkseeCurrenday == false && checkbetween == false
-                                                                      ? index
-                                                                      : index + _startdate - 1]['out1'] !=
+                                                          context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['out1'] !=
                                                               null &&
-                                                          context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false
-                                                                  ? index + currentDay - 1
-                                                                  : checkseeCurrenday == false && checkbetween == false
-                                                                      ? index
-                                                                      : index + _startdate - 1]['in2'] !=
+                                                          context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['in2'] !=
                                                               null &&
-                                                          context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false
-                                                                  ? index + currentDay - 1
-                                                                  : checkseeCurrenday == false && checkbetween == false
-                                                                      ? index
-                                                                      : index + _startdate - 1]['out2'] !=
+                                                          context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['out2'] !=
                                                               null
                                                       ? Column(
                                                           children: [
@@ -381,109 +250,33 @@ class _ManamentRollCall_ScreenState extends State<ManamentRollCall_Screen> {
                                                                 time: context
                                                                     .watch<
                                                                         DetailRollCallUser_Provider>()
-                                                                    .data_Rollcall_MonthYear()[checkseeCurrenday ==
-                                                                            true &&
-                                                                        checkbetween ==
-                                                                            false
-                                                                    ? index +
-                                                                        currentDay -
-                                                                        1
-                                                                    : checkseeCurrenday ==
-                                                                                false &&
-                                                                            checkbetween ==
-                                                                                false
-                                                                        ? index
-                                                                        : index +
-                                                                            _startdate -
-                                                                            1]['in1'],
-                                                                place: context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false
-                                                                    ? index + currentDay - 1
-                                                                    : checkseeCurrenday == false && checkbetween == false
-                                                                        ? index
-                                                                        : index + _startdate - 1]['place_in1']),
+                                                                    .data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['in1'],
+                                                                place: context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['place_in1']),
                                                             Item_Detaill_Rollcall(
-                                                                time: context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday ==
-                                                                            true
-                                                                        ? index +
-                                                                            currentDay -
-                                                                            1
-                                                                        : index]
+                                                                time: context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]
                                                                     ['out1'],
                                                                 place: context
                                                                     .watch<
                                                                         DetailRollCallUser_Provider>()
-                                                                    .data_Rollcall_MonthYear()[checkseeCurrenday ==
-                                                                            true &&
-                                                                        checkbetween ==
-                                                                            false
-                                                                    ? index +
-                                                                        currentDay -
-                                                                        1
-                                                                    : checkseeCurrenday == false &&
-                                                                            checkbetween ==
-                                                                                false
-                                                                        ? index
-                                                                        : index +
-                                                                            _startdate -
-                                                                            1]['place_out1']),
+                                                                    .data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['place_out1']),
                                                             Item_Detaill_Rollcall(
                                                                 time: context
                                                                     .watch<
                                                                         DetailRollCallUser_Provider>()
-                                                                    .data_Rollcall_MonthYear()[checkseeCurrenday ==
-                                                                            true &&
-                                                                        checkbetween ==
-                                                                            false
-                                                                    ? index +
-                                                                        currentDay -
-                                                                        1
-                                                                    : checkseeCurrenday ==
-                                                                                false &&
-                                                                            checkbetween ==
-                                                                                false
-                                                                        ? index
-                                                                        : index +
-                                                                            _startdate -
-                                                                            1]['in2'],
-                                                                place: context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false
-                                                                    ? index + currentDay - 1
-                                                                    : checkseeCurrenday == false && checkbetween == false
-                                                                        ? index
-                                                                        : index + _startdate - 1]['place_in2']),
+                                                                    .data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['in2'],
+                                                                place: context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['place_in2']),
                                                             Item_Detaill_Rollcall(
-                                                                time: context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday ==
-                                                                            true
-                                                                        ? index +
-                                                                            currentDay -
-                                                                            1
-                                                                        : index]
+                                                                time: context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]
                                                                     ['out2'],
                                                                 place: context
                                                                     .watch<
                                                                         DetailRollCallUser_Provider>()
-                                                                    .data_Rollcall_MonthYear()[checkseeCurrenday ==
-                                                                            true &&
-                                                                        checkbetween ==
-                                                                            false
-                                                                    ? index +
-                                                                        currentDay -
-                                                                        1
-                                                                    : checkseeCurrenday == false &&
-                                                                            checkbetween ==
-                                                                                false
-                                                                        ? index
-                                                                        : index +
-                                                                            _startdate -
-                                                                            1]['place_out2'])
+                                                                    .data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['place_out2'])
                                                           ],
                                                         )
                                                       : Item_Detaill_Rollcall(
-                                                          time: context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false
-                                                              ? index + currentDay - 1
-                                                              : checkseeCurrenday == false && checkbetween == false
-                                                                  ? index
-                                                                  : index + _startdate - 1]['in1'],
-                                                          place: context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[index]['place_in1']),
+                                                          time: context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['in1'],
+                                                          place: context.watch<DetailRollCallUser_Provider>().data_Rollcall_MonthYear()[checkseeCurrenday == true && checkbetween == false ? currentDay - index - 1 : checkseeCurrenday == false && checkbetween == false ? index : _enddate - index - 1]['place_in1']),
                                     ],
                                   ),
                                 ),
@@ -563,17 +356,20 @@ class _ManamentRollCall_ScreenState extends State<ManamentRollCall_Screen> {
         valueText = '$startDate to $endDate';
 
         if (startDate != "null" && endDate == "null") {
-          showDialog(context: context, builder:(context) {
-             return AlertDialog(
-              content: Container(
-                height: MediaQuery.of(context).size.height*0.4,
-                child: Center(child: CircularProgressIndicator())),
-             );
-          }, );
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                content: Container(
+                    height: MediaQuery.of(context).size.height * 0.4,
+                    child: Center(child: CircularProgressIndicator())),
+              );
+            },
+          );
           await context
               .read<DetailRollCallUser_Provider>()
               .set_Data_Day_OneDay_Find(DateTime.parse(startDate.trim()));
-         Navigator.pop(context);
+          Navigator.pop(context);
           int start_month = int.parse(
               DateFormat('MM').format(DateTime.parse(startDate.trim())));
           int start_year = 2000 +
@@ -597,22 +393,30 @@ class _ManamentRollCall_ScreenState extends State<ManamentRollCall_Screen> {
               int.parse(
                   DateFormat('yy').format(DateTime.parse(startDate.trim())));
           if (end_month == start_month && end_year == start_year) {
-             showDialog(context: context, builder:(context) {
-             return AlertDialog(
-              content: Container(
-                height: MediaQuery.of(context).size.height*0.4,
-                child: Center(child: CircularProgressIndicator())),
-             );
-          }, );
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  content: Container(
+                      height: MediaQuery.of(context).size.height * 0.4,
+                      child: Center(child: CircularProgressIndicator())),
+                );
+              },
+            );
             _startdate = int.parse(
                 DateFormat('dd').format(DateTime.parse(startDate.trim())));
-            _enddate = int.parse(
+            int temp_endate = int.parse(
                 DateFormat('dd').format(DateTime.parse(endDate.trim())));
-
+            if (temp_endate <
+                int.parse(DateFormat('dd').format(DateTime.now()))) {
+              _enddate = temp_endate;
+            } else {
+              _enddate = int.parse(DateFormat('dd').format(DateTime.now()));
+            }
             await context
                 .read<DetailRollCallUser_Provider>()
                 .set_data_Rollcall_Current_Motnh(start_month, start_year);
-                Navigator.pop(context);
+            Navigator.pop(context);
             count_between = _enddate - _startdate;
             checkbetween = true;
             checkseeCurrenday = false;
