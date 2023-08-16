@@ -70,6 +70,7 @@ class _HomePageUserState extends State<HomePageUser> {
   }
 
   Future<void> get_data_current_day() async {
+    context.read<Wifi_Provider>().setname(null);
     context.read<Location_Provider>().set__curren_address();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     id_personnel = prefs.getString('id_personnel')!;
@@ -128,6 +129,7 @@ class _HomePageUserState extends State<HomePageUser> {
                         checking_dialog(h);
                         await getcalculateDistance();
                         await checkmac();
+                        if(mounted!=false)
                         Navigator.pop(context);
                         if (distance <= meter && mac_check == true) {
                           _scanQRCode();

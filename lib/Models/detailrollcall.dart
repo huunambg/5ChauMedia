@@ -13,7 +13,6 @@ class DetailRollCallUser_Provider extends ChangeNotifier {
       int.parse(DateFormat('MM').format(DateTime.now()).toString());
   int currentYear =
       int.parse(DateFormat('yyyy').format(DateTime.now()).toString());
-
   String currentDay = "${DateFormat('dd').format(DateTime.now())}";
   Future<void> set_Data_Day_OneDay() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -52,7 +51,7 @@ class DetailRollCallUser_Provider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void set_Data_Day_OneDay_Find(DateTime dateTime) async {
+ Future <void> set_Data_Day_OneDay_Find(DateTime dateTime) async {
     String day = DateFormat("dd").format(dateTime);
     String month = DateFormat("MM").format(dateTime);
     String year = DateFormat("yy").format(dateTime);
@@ -62,7 +61,7 @@ class DetailRollCallUser_Provider extends ChangeNotifier {
     String id_personnel = prefs.getString('id_personnel')!;
     _data_Rollcall_Month_Year = await NetworkRequest()
         .getdataRollcall_detail_day_one_day("20$year$month", id_personnel, day);
-    //print("data $_data_Rollcall_Month_Year");
+    print("data $_data_Rollcall_Month_Year");
     notifyListeners();
   }
 

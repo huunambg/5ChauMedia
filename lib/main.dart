@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:lottie/lottie.dart';
 import '/Models/Data.dart';
 import '/Models/datauser.dart';
 import '/Models/detailrollcall.dart';
@@ -12,9 +11,9 @@ import 'Models/settings.dart';
 import 'Screens/loading.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'firebase_options.dart';
-
+import 'package:calendar_date_picker2/calendar_date_picker2.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -70,6 +69,10 @@ class MyApp extends StatelessWidget {
         duration: 3000,
         splashTransition: SplashTransition.scaleTransition,
       ),
+            localizationsDelegates: GlobalMaterialLocalizations.delegates,
+      supportedLocales: const [
+        Locale('vi', ''),
+      ],
     );
   }
 }

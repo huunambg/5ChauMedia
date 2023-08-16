@@ -1,4 +1,3 @@
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:http/http.dart' as http;
@@ -59,28 +58,53 @@ class _AccountState extends State<Account> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text("Personnel")
+                Text("Nhân viên chính thức")
               ],
             ),
             SizedBox(height: 20),
             ItemAccount_OK(
-                icon: Icons.attach_money, onpressed: () {}, titile: "Lương"),
-            ItemAccount_OK(
-                icon: Icons.check,
+                icon: Icons.attach_money,
                 onpressed: () {
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (context) => DetailRollCallUser()));
+                  CherryToast.warning(title: Text("Đang update!"))
+                      .show(context);
+                  playBeepWarning();
                 },
-                titile: "Thông tin điểm danh"),
+                titile: "Lương"),
+            ItemAccount_OK(
+                icon: Icons.lock,
+                onpressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text("Đổi mật khẩu"),
+                        content: TextField(
+                            decoration: InputDecoration(
+                                labelText: "Nhập mật khẩu mới")),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text("Quay lại"),
+                          ),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text("Xác nhận"))
+                        ],
+                      );
+                    },
+                  );
+                },
+                titile: "Đổi mật khẩu"),
             ItemAccount_OK(
                 icon: Ionicons.help,
                 onpressed: () async {
-                 NetworkInfo networkInfo = NetworkInfo();
-                 String? Mac  =await networkInfo.getWifiBSSID();
-                  CherryToast.info(title: Text("${Mac}"))
-                      .show(context);
+                  NetworkInfo networkInfo = NetworkInfo();
+                  String? Mac = await networkInfo.getWifiBSSID();
+                  CherryToast.info(title: Text("${Mac}")).show(context);
                 },
                 titile: "Show MAC WIFI"),
             ItemAccount_OK(
@@ -146,5 +170,9 @@ class _AccountState extends State<Account> {
 
   void playBeep() async {
     await player.play(AssetSource("sounds/tb.mp3"));
+  }
+
+  void playBeepWarning() async {
+    await player.play(AssetSource("sounds/warning.mp3"));
   }
 }
