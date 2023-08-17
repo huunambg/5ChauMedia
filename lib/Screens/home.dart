@@ -282,8 +282,9 @@ class _HomePageUserState extends State<HomePageUser> {
       int time_delay = await get_caculator_time_rollcall();
       print("Time delay $time_delay");
       if (time_delay <= 0) {
+       if(context.read<Location_Provider>().current_address().toString() !="Chưa tìm thấy."){
         String res = await _networkRequest.rollcall_personnel(id_per,
-            context.read<Location_Provider>().current_address().toString());
+            context.read<Location_Provider>().current_address());
         Navigator.pop(context);
         if (res == "Successful Attendance") {
           CherryToast.success(
@@ -297,6 +298,14 @@ class _HomePageUserState extends State<HomePageUser> {
               .show(context);
           playBeepError();
         }
+       }else{
+        Navigator.pop(context);
+             CherryToast.error(title: Text("Chưa tìm được vị trí của bạn!"))
+              .show(context);
+          playBeepError();
+       }
+
+
       } else if (time_delay > 0) {
         Navigator.pop(context);
         CherryToast.error(

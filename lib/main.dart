@@ -12,7 +12,6 @@ import 'Screens/loading.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'firebase_options.dart';
-import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,8 +60,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: AnimatedSplashScreen(
-        backgroundColor:
-            Color(context.watch<Setting_Provider>().background_color()),
         splashIconSize: 200,
         splash: "assets/qr_code_scan.png",
         nextScreen: Loading(),

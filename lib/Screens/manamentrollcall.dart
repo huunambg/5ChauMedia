@@ -408,7 +408,7 @@ class _ManamentRollCall_ScreenState extends State<ManamentRollCall_Screen> {
             int temp_endate = int.parse(
                 DateFormat('dd').format(DateTime.parse(endDate.trim())));
             if (temp_endate <
-                int.parse(DateFormat('dd').format(DateTime.now()))) {
+                int.parse(DateFormat('dd').format(DateTime.now())) || start_month > int.parse(DateFormat('MM').format(DateTime.now()))) {
               _enddate = temp_endate;
             } else {
               _enddate = int.parse(DateFormat('dd').format(DateTime.now()));
@@ -427,7 +427,7 @@ class _ManamentRollCall_ScreenState extends State<ManamentRollCall_Screen> {
           } else {
             CherryToast.warning(
                     title: Text(
-                        "Bạn chỉ được chọn khoảng trong phạm vi của tháng"))
+                        "Bạn chỉ được chọn trong phạm vi trong tháng"))
                 .show(context);
           }
         }
@@ -450,6 +450,8 @@ class _ManamentRollCall_ScreenState extends State<ManamentRollCall_Screen> {
       decoration: TextDecoration.underline,
     );
     final config = CalendarDatePicker2WithActionButtonsConfig(
+      firstDate: DateTime(2023,8),
+      lastDate: DateTime(2030),
       dayTextStyle: dayTextStyle,
       calendarType: CalendarDatePicker2Type.range,
       selectedDayHighlightColor: Colors.purple[800],

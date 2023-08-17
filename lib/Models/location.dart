@@ -51,10 +51,10 @@ class Location_Provider extends ChangeNotifier {
         print(fullAddress);
         return fullAddress;
       } else {
-        return 'Chua tìm thấy !';
+        return 'Chưa tìm thấy.';
       }
     } catch (e) {
-      return 'Chưa tìm thấy !';
+      return 'Chưa tìm thấy.';
     }
   }
 
