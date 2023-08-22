@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:http/http.dart' as http;
@@ -5,6 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:lottie/lottie.dart';
 import 'package:network_info_plus/network_info_plus.dart';
+import 'package:personnel_5chaumedia/Models/datauser.dart';
+import 'package:personnel_5chaumedia/Screens/editpassword.dart';
+import 'package:personnel_5chaumedia/Screens/editprofile.dart';
 import '/Models/settings.dart';
 import '/Widgets/itemaccount.dart';
 import '/constants.dart';
@@ -24,6 +29,7 @@ class _AccountState extends State<Account> {
   String? user_name;
   String? id_per;
   bool check_color = false;
+  int check_exist_Notification_visted = 0;
 
   @override
   void initState() {
@@ -31,12 +37,10 @@ class _AccountState extends State<Account> {
     _loadSaved();
   }
 
-  int check_exist_Notification_visted = 0;
-
   @override
   Widget build(BuildContext context) {
     // double w = MediaQuery.of(context).size.width;
-    // double h = MediaQuery.of(context).size.height;
+     double h = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Scaffold(
         backgroundColor:
@@ -46,9 +50,12 @@ class _AccountState extends State<Account> {
           children: [
             Column(
               children: [
-                CircleAvatar(
-                  radius: 50,
-                  child: LottieBuilder.asset("assets/lottie/girl.json"),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(500),
+                  child: Container(height: h*0.2,width: h*0.2,
+                  child: context.read<DataUser_Provider>().base64_img() !="Error" && context.read<DataUser_Provider>().base64_img()!= "" ? Image(image: MemoryImage(base64Decode(context.watch<DataUser_Provider>().base64_img())),fit: BoxFit.cover,): Lottie.asset("assets/lottie/girl.json",fit: BoxFit.cover),
+                  ),
+
                 ),
                 SizedBox(height: 10),
                 Text(
@@ -63,40 +70,17 @@ class _AccountState extends State<Account> {
             ),
             SizedBox(height: 20),
             ItemAccount_OK(
-                icon: Icons.attach_money,
+                icon: Icons.person_outline_outlined,
                 onpressed: () {
-                  CherryToast.warning(title: Text("Đang update!"))
-                      .show(context);
-                  playBeepWarning();
+                  context.read<DataUser_Provider>().set_base64_img_edit(context.read<DataUser_Provider>().base64_img());
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>Edit_Profile_Screen()));
                 },
-                titile: "Lương"),
+                titile: "Chỉnh sửa thông tin"),
             ItemAccount_OK(
                 icon: Icons.lock,
                 onpressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text("Đổi mật khẩu"),
-                        content: TextField(
-                            decoration: InputDecoration(
-                                labelText: "Nhập mật khẩu mới")),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: Text("Quay lại"),
-                          ),
-                          TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text("Xác nhận"))
-                        ],
-                      );
-                    },
-                  );
+                 
+                 Navigator.push(context, MaterialPageRoute(builder: (context)=>Edit_Password_Screen()));
                 },
                 titile: "Đổi mật khẩu"),
             ItemAccount_OK(

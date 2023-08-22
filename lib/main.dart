@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
-import '/Models/Data.dart';
+import 'Models/data.dart';
 import '/Models/datauser.dart';
 import '/Models/detailrollcall.dart';
 import '/Models/location.dart';
@@ -27,30 +27,9 @@ void main() async {
       ChangeNotifierProvider(create: (_) => Wifi_Provider()),
       ChangeNotifierProvider(create: (_) => DataUser_Provider()),
       ChangeNotifierProvider(create: (_) => Data_Provider()),
-      ChangeNotifierProvider(create: (_) => Location_Provider())
+      ChangeNotifierProvider(create: (_) => Location_Provider()),
     ], child: MyApp()));
   });
-  // NotificationSettings settings = await messaging.requestPermission(
-  //   alert: true,
-  //   announcement: false,
-  //   badge: true,
-  //   carPlay: false,
-  //   criticalAlert: false,
-  //   provisional: false,
-  //   sound: true,
-  // );
-  // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-  //   print('Got a message whilst in the foreground!');
-  //   print('Message data: ${message.data}');
-
-  //   if (message.notification != null) {
-  //     print('Message also contained a notification: ${message.notification}');
-  //   }
-  // });
-  // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-  //   print('Message clicked from background: ${message.notification?.body}');
-  //   // Xử lý thông báo ở đây (ví dụ: chuyển hướng người dùng đến màn hình cụ thể)
-  // });
 }
 
 class MyApp extends StatelessWidget {

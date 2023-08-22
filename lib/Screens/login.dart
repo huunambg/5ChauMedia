@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:personnel_5chaumedia/Models/datauser.dart';
+import 'package:provider/provider.dart';
 import '/Services/networks.dart';
 import '/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -76,8 +78,11 @@ class _LoginScreenState extends State<LoginScreen> {
         var data2 = jsonDecode(response.body)['id_per'][0];
         await prefs.setString('id_per', data2['id'].toString());
         await prefs.setString('user_name', data['name'].toString());
+        await prefs.setString('email',data['email']);
+      //  print(jsonDecode(response.body));
         var data3 = jsonDecode(response.body)['pid'];
         await prefs.setString('id_personnel', data3[0]['personnel_id']);
+        await prefs.setString('phone',jsonDecode(response.body)['phone'][0]['phone']);
         // Chuyển đến màn hình chính hoặc màn hình tiếp theo
         Navigator.pushReplacement(
           context,

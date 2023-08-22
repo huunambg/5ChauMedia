@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import '/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'login.dart';
@@ -41,13 +40,15 @@ class _LoadingState extends State<Loading> {
         if (response.statusCode == 200) {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           var data = jsonDecode(response.body)['user'];
-
           var data2 = jsonDecode(response.body)['id_per'][0];
           await prefs.setString('id_per', data2['id'].toString());
           await prefs.setString('user_name', data['name'].toString());
           await prefs.setBool("is_logout", false);
           var data3 = jsonDecode(response.body)['pid'];
           await prefs.setString('id_personnel', data3[0]['personnel_id']);
+          await prefs.setString('email',data['email']);
+          
+          print(jsonDecode(response.body));
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => RootUser()),
@@ -114,7 +115,6 @@ class _LoadingState extends State<Loading> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: theme_color,
       body: Center(child: CircularProgressIndicator()),
     );
   }

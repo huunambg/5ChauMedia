@@ -3,7 +3,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:personnel_5chaumedia/Models/datauser.dart';
+import 'package:personnel_5chaumedia/Services/networks.dart';
 import 'package:personnel_5chaumedia/Services/notification.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '/Models/detailrollcall.dart';
 import '/Models/notification.dart';
 import '/Models/wifi.dart';
@@ -45,7 +48,14 @@ class _RootUserState extends State<RootUser> {
 FirebaseMessaging messaging = FirebaseMessaging.instance; 
 
 void permison()async{
-        NotificationSettings settings = await messaging.requestPermission(sound: true
+    NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
   );
 }
 
@@ -173,10 +183,19 @@ void permison()async{
   }
 
   Future<void> load_save() async {
+    
     context.read<Notification_Provider>().set_id_personnel();
     context.read<Notification_Provider>().set_count_notification_not_checked();
-    context.read<DetailRollCallUser_Provider>().set_id_per();
+    await context.read<DataUser_Provider>().set_id_name_personnel();
+    String? base64_image = await NetworkRequest().get_base64_img(context.read<DataUser_Provider>().id_per());
+    context.read<DataUser_Provider>().set_base64_img(base64_image);
+    context.read<DataUser_Provider>().set_base64_img_edit(base64_image);
   }
+
+
+
+
+
   final tabs = [
     HomePageUser(),
     ManamentRollCall_Screen(),

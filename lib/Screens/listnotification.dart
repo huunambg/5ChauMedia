@@ -2,7 +2,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:ionicons/ionicons.dart';
 import '/Models/notification.dart';
 import '/Models/settings.dart';
 import '/Services/networks.dart';
@@ -122,13 +121,12 @@ class _Notification_ScreenState extends State<Notification_Screen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "📢${snapshot.data?[index]['title']}",
+                                      "📢 ${snapshot.data?[index]['title']}",
                                       style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),
                                     ),
                                     Container(

@@ -58,6 +58,7 @@ class _HomePageUserState extends State<HomePageUser> {
     _requestLocationPermission();
     Statistical(null, null);
     get_data_current_day();
+
   }
 
   void getWifiInfo() async {
@@ -76,7 +77,6 @@ class _HomePageUserState extends State<HomePageUser> {
     id_personnel = prefs.getString('id_personnel')!;
     await context.read<DetailRollCallUser_Provider>().set_Data_Day_OneDay();
     context.read<Notification_Provider>().set_count_notification_not_checked();
-    context.read<DataUser_Provider>().set_id_name_personnel();
     context.read<DetailRollCallUser_Provider>().set_break_time_rollcall();
   }
 
@@ -195,7 +195,6 @@ class _HomePageUserState extends State<HomePageUser> {
       working_day = data['working_day'];
       total_working_day = data['total_working_day'];
       leave_permission = data['leave_permission'];
-      id_personnel = data["personnel_id"];
       id_rollcall = data["rollcall_id"];
       time = data['total_working_time'];
       leave_without_permission = data['leave_without_permission'];
@@ -455,11 +454,7 @@ class _HomePageUserState extends State<HomePageUser> {
   }
 
   Future<void> loadSaved() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    id_per = prefs.getString('id_per');
-    rollcall_time = prefs.getString('rollcall_time');
-    if (id_per != null || rollcall_time != null) {
-      setState(() {});
-    }
+     String? base64_image = await NetworkRequest().get_base64_img(context.read<DataUser_Provider>().id_per());
+      context.read<DataUser_Provider>().set_base64_img(base64_image);
   }
 }
