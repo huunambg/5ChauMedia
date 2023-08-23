@@ -10,7 +10,7 @@ class DataUser_Provider extends ChangeNotifier{
   String _phone ="";
   String _base64_img_edit = "";
  Future<void> set_id_name_personnel()async{
-      SharedPreferences prefs = await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     _id_personnel = prefs.getString('id_personnel')!;
     _name_personnel = prefs.getString("user_name")!;
     _id_per = prefs.getString('id_per')!;

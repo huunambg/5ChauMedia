@@ -25,3 +25,4 @@ const String URL_GET_BREAK_TIME="https://$SERVER_NAME/get-break-time";
 const String URL_GET_WIFI_MAC_ADDRESS="https://$SERVER_NAME/get-mac-address";
 const String URL_EDIT_EDITIMG="https://$SERVER_NAME/personnel/";
 const String URL_GET_BASE64_IMG="https://$SERVER_NAME/get-img/";
+const String URL_EDIT_PROFILE="https://$SERVER_NAME/personnel/";

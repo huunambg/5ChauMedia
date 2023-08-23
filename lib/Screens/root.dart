@@ -191,11 +191,7 @@ void permison()async{
     context.read<DataUser_Provider>().set_base64_img(base64_image);
     context.read<DataUser_Provider>().set_base64_img_edit(base64_image);
   }
-
-
-
-
-
+  
   final tabs = [
     HomePageUser(),
     ManamentRollCall_Screen(),

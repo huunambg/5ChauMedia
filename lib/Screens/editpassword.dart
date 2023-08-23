@@ -1,7 +1,10 @@
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:personnel_5chaumedia/Models/datauser.dart';
+import 'package:personnel_5chaumedia/Services/networks.dart';
 import 'package:personnel_5chaumedia/constants.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Edit_Password_Screen extends StatefulWidget {
@@ -109,7 +112,7 @@ class _Edit_Password_ScreenState extends State<Edit_Password_Screen> {
                 ),
                 onPressed: () async {
                   bool check = false;
-               await   showDialog(
+                  await showDialog(
                     context: context,
                     builder: (context) {
                       return AlertDialog(
@@ -145,38 +148,62 @@ class _Edit_Password_ScreenState extends State<Edit_Password_Screen> {
                     },
                   );
                   if (check == true) {
-                       if(old_pass_controller.text==""||new_pass_controller.text==""||renew_pass_controller.text==""){
-                         Navigator.pop(context);
-                        CherryToast.warning(title: Text("Vui lòng kiểm tra dữ liệu")).show(context);
-                       }
-                       else{
-                              SharedPreferences prefs =
-                        await SharedPreferences.getInstance();
-                    String? old_pass = await prefs.getString('password');
-                    Navigator.pop(context);
-                    if (old_pass_controller.text == old_pass) {
-                      if (new_pass_controller.text == renew_pass_controller.text) {
-                        CherryToast.success(
-                                title: Text("Cập nhật mật khẩu thành công"))
-                            .show(context);
+                    if (old_pass_controller.text == "" ||
+                        new_pass_controller.text == "" ||
+                        renew_pass_controller.text == "") {
+                      Navigator.pop(context);
+                      CherryToast.warning(
+                              title: Text("Vui lòng kiểm tra dữ liệu"))
+                          .show(context);
+                    } else {
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      String? old_pass = await prefs.getString('password');
+                      Navigator.pop(context);
+                      if (old_pass_controller.text == old_pass) {
+                        if (new_pass_controller.text ==
+                            renew_pass_controller.text) {
+                          String? massage = await NetworkRequest()
+                              .edit_ProfileS(
+                                  context.read<DataUser_Provider>().id_per(),
+                                  context
+                                      .read<DataUser_Provider>()
+                                      .name_personnel(),
+                                  context.read<DataUser_Provider>().email(),
+                                  context.read<DataUser_Provider>().phone(),
+                                  new_pass_controller.text);
+
+                          if (massage != "Error") {
+                            CherryToast.success(
+                                    title: Text("Cập nhật mật khẩu thành công"))
+                                .show(context);
+                               prefs.setString('password', new_pass_controller.text);
                             setState(() {
-                              new_pass_controller.text="";
-                              old_pass_controller.text="";
-                              renew_pass_controller.text="";
+                              new_pass_controller.text = "";
+                              old_pass_controller.text = "";
+                              renew_pass_controller.text = "";
                             });
+                     
+                            
+                          } else {
+                            CherryToast.error(
+                                    title: Text("Cập nhật mật khẩu thất bại"))
+                                .show(context);
+                          }
+                        } else {
+                          CherryToast.error(
+                                  title: Text("Nhập lại mật khẩu không khớp"))
+                              .show(context);
+                        }
                       } else {
-                        CherryToast.error(
-                                title: Text("Nhập lại mật khẩu không khớp"))
+                        CherryToast.error(title: Text("Mật khẩu cũ không đúng"))
                             .show(context);
                       }
-                    } else {
-                      CherryToast.error(title: Text("Mật khẩu cũ không đúng"))
-                          .show(context);
                     }
-                       }
-                      check = false;
+                    check = false;
+                  } else {
+                    Navigator.pop(context);
                   }
-                
                 },
                 child: const Text(
                   'Cập nhật',

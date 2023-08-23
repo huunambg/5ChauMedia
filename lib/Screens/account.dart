@@ -26,7 +26,6 @@ class Account extends StatefulWidget {
 
 class _AccountState extends State<Account> {
   AudioPlayer player = AudioPlayer();
-  String? user_name;
   String? id_per;
   bool check_color = false;
   int check_exist_Notification_visted = 0;
@@ -59,7 +58,7 @@ class _AccountState extends State<Account> {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  "$user_name",
+                  "${context.watch<DataUser_Provider>().name_personnel()}",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -135,11 +134,7 @@ class _AccountState extends State<Account> {
   Future<void> _loadSaved() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     id_per = prefs.getString('id_per');
-    user_name = prefs.getString('user_name');
 
-    if (id_per != null || user_name != null) {
-      setState(() {});
-    }
   }
 
   Future<void> logout(BuildContext context) async {

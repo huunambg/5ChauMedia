@@ -25,7 +25,6 @@ class _Edit_Profile_ScreenState extends State<Edit_Profile_Screen> {
   String imagepath = "";
   String base64String = "";
   final ImagePicker imagePicker = ImagePicker();
-
   @override
   void initState() {
     // TODO: implement initState
@@ -48,6 +47,7 @@ class _Edit_Profile_ScreenState extends State<Edit_Profile_Screen> {
         Uint8List imagebytes = await imagefile.readAsBytes();
         base64String = base64.encode(imagebytes);
         context.read<DataUser_Provider>().set_base64_img_edit(base64String);
+        update_avatar();
       } else {
         print('No image is selected');
       }
@@ -176,29 +176,7 @@ class _Edit_Profile_ScreenState extends State<Edit_Profile_Screen> {
                           );
                         },
                       );
-                      if (base64String == "") {
-                        Navigator.pop(context);
-                        CherryToast.error(title: Text("Vui lòng chọn ảnh mới"))
-                            .show(context);
-                      } else {
-                        String massaging = await NetworkRequest().edit_img(
-                            context.read<DataUser_Provider>().id_per(),
-                            base64String);
-                        Navigator.pop(context);
-                        if (massaging != "Error") {
-                          CherryToast.success(
-                                  title: Text("Cập nhật dữ liệu thành công"))
-                              .show(context);
-                          context
-                              .read<DataUser_Provider>()
-                              .set_base64_img(base64String);
-                        } else {
-                          CherryToast.error(
-                                  title: Text("Cập nhật dữ liệu thất bại"))
-                              .show(context);
-                        }
-                        check = false;
-                      }
+                      update_Profile();
                     }
                   },
                   child: const Text(
@@ -212,6 +190,93 @@ class _Edit_Profile_ScreenState extends State<Edit_Profile_Screen> {
         ),
       ),
     );
+  }
+
+  Future<void> update_Profile() async {
+    if (phone_controller.text != "" &&
+        int.tryParse(phone_controller.text) != null &&
+        email_controller.text != "" &&
+        name_controller.text != "") {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String? pass = await prefs.getString('password');
+      String? massage = await NetworkRequest()
+          .edit_ProfileS(context.read<DataUser_Provider>().id_per(),name_controller.text,email_controller.text,phone_controller.text,pass);
+              Navigator.pop(context);
+      if (massage != "Error") {
+        CherryToast.success(title: Text("Cập nhật dữ liệu thành công"))
+            .show(context);
+
+        await  prefs.setString('user_name',name_controller.text);
+         await prefs.setString('email',email_controller.text);
+         await prefs.setString('phone',phone_controller.text);
+        
+        context.read<DataUser_Provider>().set_id_name_personnel();
+            
+      } else {
+        CherryToast.error(title: Text("Cập nhật dữ liệu thất bại"))
+            .show(context);
+      }
+    }
+  }
+
+  Future<void> update_avatar() async {
+    bool check = false;
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Ảnh đại diện"),
+          content: Text("Bạn có muốn cập nhật ảnh đại diện"),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  context.read<DataUser_Provider>().set_base64_img_edit(
+                      context.read<DataUser_Provider>().base64_img());
+                },
+                child: Text("Hủy")),
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  check = true;
+                },
+                child: Text("Xác nhận"))
+          ],
+        );
+      },
+    );
+    if (check == true) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Container(
+              height: MediaQuery.of(context).size.height * 0.3,
+              child: Center(
+                child: Lottie.asset("assets/lottie/loading.json"),
+              ),
+            ),
+          );
+        },
+      );
+
+      if (base64String == "") {
+        Navigator.pop(context);
+        CherryToast.error(title: Text("Vui lòng chọn ảnh mới")).show(context);
+      } else {
+        String massaging = await NetworkRequest()
+            .edit_img(context.read<DataUser_Provider>().id_per(), base64String);
+        Navigator.pop(context);
+        if (massaging != "Error") {
+          CherryToast.success(title: Text("Cập nhật ảnh đại diện thành công"))
+              .show(context);
+          context.read<DataUser_Provider>().set_base64_img(base64String);
+        } else {
+          CherryToast.error(title: Text("Cập nhật ảnh thất bại")).show(context);
+        }
+        check = false;
+      }
+    }
   }
 }
 
