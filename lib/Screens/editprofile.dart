@@ -27,7 +27,6 @@ class _Edit_Profile_ScreenState extends State<Edit_Profile_Screen> {
   final ImagePicker imagePicker = ImagePicker();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     set_data();
   }

@@ -48,7 +48,7 @@ class Location_Provider extends ChangeNotifier {
 
         String fullAddress =
             '$name, $street, $subLocality, $locality, $administrativeArea, $country';
-        print(fullAddress);
+      //  print(fullAddress);
         return fullAddress;
       } else {
         return 'Chưa tìm thấy.';

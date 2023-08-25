@@ -23,36 +23,5 @@ AppBar CustomAppBar(BuildContext context) {
             )
           ],
         ),
-        // actions: [
-        //   IconButton(
-        //       onPressed: () {
-        //         showMonthPicker(context, onSelected: (month, year) {
-        //           if (kDebugMode) {
-        //             print('Chọn tháng: $month, year: $year');
-        //           }
-        //           setState(() {
-        //             this.month = month;
-        //             this.year = year;
-        //           });
-        //           Statistical(this.month, this.year);
-        //         },
-        //             initialSelectedMonth: month,
-        //             initialSelectedYear: year,
-        //             firstEnabledMonth: 8,
-        //             lastEnabledMonth: 10,
-        //             firstYear: 2023,
-        //             lastYear: 2030,
-        //             selectButtonText: 'OK',
-        //             cancelButtonText: 'Quay lại',
-        //             highlightColor: Colors.purple,
-        //             textColor: Colors.black,
-        //             contentBackgroundColor: Colors.white,
-        //             dialogBackgroundColor: Colors.grey[200]);
-        //       },
-        //       icon: Icon(
-        //         Ionicons.calendar_outline,
-        //         size: 30,
-        //       )),
-        // ],
       );
 }

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import '/Models/datauser.dart';
 import 'package:provider/provider.dart';
@@ -11,23 +13,25 @@ class Item_Detaill_Rollcall extends StatelessWidget {
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
     return Container(
-      padding: EdgeInsets.only(left: 7, right: 7),
+      padding: EdgeInsets.only(left: 2, right: 7),
       margin: EdgeInsets.only(top: h * 0.01),
       color: Color.fromARGB(255, 226, 222, 222),
       height: h * 0.1,
       child: Row(
         children: [
-          Container(
-            margin: EdgeInsets.only(right: 5),
-            padding: EdgeInsets.all(2),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(100),
-              color: Colors.white,
+          ClipRRect(
+            borderRadius: BorderRadius.circular(500),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(500),
+                color: Colors.white,
+              ),
+              height: h * 0.075,
+              width: h * 0.075,
+              child: context.read<DataUser_Provider>().base64_img() !="Error" && context.read<DataUser_Provider>().base64_img()!= "" ? Image(image: MemoryImage(base64Decode(context.watch<DataUser_Provider>().base64_img())),fit: BoxFit.cover,): Image.asset("assets/images/qr_scanner.png",fit: BoxFit.cover,),
             ),
-            height: h * 0.075,
-            width: h * 0.075,
-            child: Image.asset("assets/images/qr_scanner.png"),
           ),
+          SizedBox(width: 5,),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,

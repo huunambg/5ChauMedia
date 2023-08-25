@@ -58,9 +58,11 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   image_picker: ^1.0.2
+  google_fonts: ^5.1.0
+  flutter_svg: ^2.0.7
 
 icons_launcher:
-  image_path: "assets/qr_code_scan.png"
+  image_path: "assets/logo5chau.png"
   platforms:
     android:
       enable: true
@@ -94,7 +96,8 @@ flutter:
     - assets/
     - assets/lottie/
     - assets/sounds/
-    - assets/images/            
+    - assets/images/
+    - assets/icons/            
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

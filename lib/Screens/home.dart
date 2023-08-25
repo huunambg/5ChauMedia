@@ -58,7 +58,6 @@ class _HomePageUserState extends State<HomePageUser> {
     _requestLocationPermission();
     Statistical(null, null);
     get_data_current_day();
-
   }
 
   void getWifiInfo() async {
@@ -101,9 +100,15 @@ class _HomePageUserState extends State<HomePageUser> {
                 children: [
                   CustomItemTodayRollCall(),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                        "5 Châu Media chúc bạn 1 ngày làm việc vui vẻ mời bạn chấm công bằng khuôn mặt hoặc QR"),
+                    padding: const EdgeInsets.all(7.0),
+                    child: Text.rich(TextSpan(children: [
+                      TextSpan(
+                          text: "5 Châu Media ",
+                          style: TextStyle(color: Colors.blue,fontSize: 16)),
+                      TextSpan(
+                          text:
+                              "chúc bạn 1 ngày làm việc vui vẻ mời bạn chấm công bằng khuôn mặt hoặc QR")
+                    ])),
                   ),
                   CustomButtonRollcall(
                     ontapface: () async {
@@ -111,10 +116,9 @@ class _HomePageUserState extends State<HomePageUser> {
                       // zger().simpleNotificationShow();
                       // NotificationService().showNotification(title: "hihi",body: "hihi");
                       // getWifiInfo();
-                       CherryToast.warning(
-                              title: Text("Đang update!"))
+                      CherryToast.warning(title: Text("Đang update!"))
                           .show(context);
-                       playBeepWarning();
+                      playBeepWarning();
                     },
                     ontapqr: () async {
                       if (context
@@ -129,8 +133,7 @@ class _HomePageUserState extends State<HomePageUser> {
                         checking_dialog(h);
                         await getcalculateDistance();
                         await checkmac();
-                        if(mounted!=false)
-                        Navigator.pop(context);
+                        if (mounted != false) Navigator.pop(context);
                         if (distance <= meter && mac_check == true) {
                           _scanQRCode();
                         } else if (mac_check == true && distance > meter) {
@@ -281,30 +284,29 @@ class _HomePageUserState extends State<HomePageUser> {
       int time_delay = await get_caculator_time_rollcall();
       print("Time delay $time_delay");
       if (time_delay <= 0) {
-       if(context.read<Location_Provider>().current_address().toString() !="Chưa tìm thấy."){
-        String res = await _networkRequest.rollcall_personnel(id_per,
-            context.read<Location_Provider>().current_address());
-        Navigator.pop(context);
-        if (res == "Successful Attendance") {
-          CherryToast.success(
-            title: Text("Điểm danh thành công"),
-            toastDuration: Duration(seconds: 2),
-          ).show(context);
-          playBeepSucces();
-          context.read<DetailRollCallUser_Provider>().set_Data_Day_OneDay();
+        if (context.read<Location_Provider>().current_address().toString() !=
+            "Chưa tìm thấy.") {
+          String res = await _networkRequest.rollcall_personnel(
+              id_per, context.read<Location_Provider>().current_address());
+          Navigator.pop(context);
+          if (res == "Successful Attendance") {
+            CherryToast.success(
+              title: Text("Điểm danh thành công"),
+              toastDuration: Duration(seconds: 2),
+            ).show(context);
+            playBeepSucces();
+            context.read<DetailRollCallUser_Provider>().set_Data_Day_OneDay();
+          } else {
+            CherryToast.error(title: Text("Bạn đã điểm danh hôm nay"))
+                .show(context);
+            playBeepError();
+          }
         } else {
-          CherryToast.error(title: Text("Bạn đã điểm danh hôm nay"))
+          Navigator.pop(context);
+          CherryToast.error(title: Text("Chưa tìm được vị trí của bạn!"))
               .show(context);
           playBeepError();
         }
-       }else{
-        Navigator.pop(context);
-             CherryToast.error(title: Text("Chưa tìm được vị trí của bạn!"))
-              .show(context);
-          playBeepError();
-       }
-
-
       } else if (time_delay > 0) {
         Navigator.pop(context);
         CherryToast.error(
@@ -314,7 +316,9 @@ class _HomePageUserState extends State<HomePageUser> {
         ).show(context);
         playBeepError();
       }
-    } else if (scanResult != Text_QR &&scanResult != "-1" && mac_check == true) {
+    } else if (scanResult != Text_QR &&
+        scanResult != "-1" &&
+        mac_check == true) {
       CherryToast.warning(
         title: Text("Mã QR không hợp lệ !"),
         toastDuration: Duration(seconds: 2),
@@ -454,7 +458,8 @@ class _HomePageUserState extends State<HomePageUser> {
   }
 
   Future<void> loadSaved() async {
-     String? base64_image = await NetworkRequest().get_base64_img(context.read<DataUser_Provider>().id_per());
-      context.read<DataUser_Provider>().set_base64_img(base64_image);
+    String? base64_image = await NetworkRequest()
+        .get_base64_img(context.read<DataUser_Provider>().id_per());
+    context.read<DataUser_Provider>().set_base64_img(base64_image);
   }
 }

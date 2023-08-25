@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:personnel_5chaumedia/Screens/loginnew.dart';
 import '/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'login.dart';
@@ -69,7 +70,7 @@ class _LoadingState extends State<Loading> {
                   onPressed: () {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => LoginScreen()),
+                      MaterialPageRoute(builder: (context) => Login_Screen_new()),
                     );
                   },
                 ),
@@ -90,7 +91,7 @@ class _LoadingState extends State<Loading> {
                 onPressed: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                    MaterialPageRoute(builder: (context) => Login_Screen_new()),
                   );
                 },
               ),
@@ -101,7 +102,7 @@ class _LoadingState extends State<Loading> {
     } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => LoginScreen()),
+        MaterialPageRoute(builder: (context) => Login_Screen_new()),
       );
     }
   }

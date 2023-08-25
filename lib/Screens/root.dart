@@ -6,8 +6,6 @@ import 'package:ionicons/ionicons.dart';
 import 'package:personnel_5chaumedia/Models/datauser.dart';
 import 'package:personnel_5chaumedia/Services/networks.dart';
 import 'package:personnel_5chaumedia/Services/notification.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '/Models/detailrollcall.dart';
 import '/Models/notification.dart';
 import '/Models/wifi.dart';
 import '/Screens/account.dart';
@@ -81,8 +79,6 @@ void permison()async{
       print('Message clicked from background: ${message.notification?.body}');
     });
     load_save();
-
-
   }
 
   @override

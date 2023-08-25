@@ -2,8 +2,6 @@ import 'dart:convert';
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:personnel_5chaumedia/Models/datauser.dart';
-import 'package:provider/provider.dart';
 import '/Services/networks.dart';
 import '/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';

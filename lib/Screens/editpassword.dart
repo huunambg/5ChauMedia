@@ -183,7 +183,6 @@ class _Edit_Password_ScreenState extends State<Edit_Password_Screen> {
                               old_pass_controller.text = "";
                               renew_pass_controller.text = "";
                             });
-                     
                             
                           } else {
                             CherryToast.error(

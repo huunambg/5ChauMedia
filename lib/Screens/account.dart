@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:http/http.dart' as http;
@@ -10,12 +9,12 @@ import 'package:network_info_plus/network_info_plus.dart';
 import 'package:personnel_5chaumedia/Models/datauser.dart';
 import 'package:personnel_5chaumedia/Screens/editpassword.dart';
 import 'package:personnel_5chaumedia/Screens/editprofile.dart';
+import 'package:personnel_5chaumedia/Screens/loginnew.dart';
 import '/Models/settings.dart';
 import '/Widgets/itemaccount.dart';
 import '/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'login.dart';
 
 class Account extends StatefulWidget {
   const Account({super.key});
@@ -39,7 +38,7 @@ class _AccountState extends State<Account> {
   @override
   Widget build(BuildContext context) {
     // double w = MediaQuery.of(context).size.width;
-     double h = MediaQuery.of(context).size.height;
+    double h = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Scaffold(
         backgroundColor:
@@ -51,10 +50,21 @@ class _AccountState extends State<Account> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(500),
-                  child: Container(height: h*0.2,width: h*0.2,
-                  child: context.read<DataUser_Provider>().base64_img() !="Error" && context.read<DataUser_Provider>().base64_img()!= "" ? Image(image: MemoryImage(base64Decode(context.watch<DataUser_Provider>().base64_img())),fit: BoxFit.cover,): Lottie.asset("assets/lottie/girl.json",fit: BoxFit.cover),
+                  child: Container(
+                    height: h * 0.2,
+                    width: h * 0.2,
+                    child: context.read<DataUser_Provider>().base64_img() !=
+                                "Error" &&
+                            context.read<DataUser_Provider>().base64_img() != ""
+                        ? Image(
+                            image: MemoryImage(base64Decode(context
+                                .watch<DataUser_Provider>()
+                                .base64_img())),
+                            fit: BoxFit.cover,
+                          )
+                        : Lottie.asset("assets/lottie/girl.json",
+                            fit: BoxFit.cover),
                   ),
-
                 ),
                 SizedBox(height: 10),
                 Text(
@@ -71,15 +81,21 @@ class _AccountState extends State<Account> {
             ItemAccount_OK(
                 icon: Icons.person_outline_outlined,
                 onpressed: () {
-                  context.read<DataUser_Provider>().set_base64_img_edit(context.read<DataUser_Provider>().base64_img());
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>Edit_Profile_Screen()));
+                  context.read<DataUser_Provider>().set_base64_img_edit(
+                      context.read<DataUser_Provider>().base64_img());
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Edit_Profile_Screen()));
                 },
                 titile: "Chỉnh sửa thông tin"),
             ItemAccount_OK(
-                icon: Icons.lock,
+                icon: Ionicons.lock_closed_outline,
                 onpressed: () {
-                 
-                 Navigator.push(context, MaterialPageRoute(builder: (context)=>Edit_Password_Screen()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Edit_Password_Screen()));
                 },
                 titile: "Đổi mật khẩu"),
             ItemAccount_OK(
@@ -91,7 +107,7 @@ class _AccountState extends State<Account> {
                 },
                 titile: "Show MAC WIFI"),
             ItemAccount_OK(
-                icon: Ionicons.settings,
+                icon: Ionicons.settings_outline,
                 onpressed: () {
                   check_color = !check_color;
                   context
@@ -101,8 +117,9 @@ class _AccountState extends State<Account> {
                 titile: "Cài đặt"),
             ItemAccount_OK(
                 icon: Ionicons.arrow_back_circle_outline,
-                onpressed: () {
-                  showDialog(
+                onpressed: () async {
+                  bool check = false;
+                  await showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
                       title: Text('Thông báo'),
@@ -110,7 +127,8 @@ class _AccountState extends State<Account> {
                       actions: <Widget>[
                         TextButton(
                           onPressed: () async {
-                            logout(context);
+                            Navigator.of(context).pop();
+                            check = true;
                           },
                           child: Text('Có'),
                         ),
@@ -123,6 +141,20 @@ class _AccountState extends State<Account> {
                       ],
                     ),
                   );
+                  if (check == true) {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          content: Container(
+                            height: h*0.3,
+                            child: Center(child: CircularProgressIndicator()),
+                          ),
+                        );
+                      },
+                    );
+                    logout(context);
+                  }
                 },
                 titile: "Đăng xuất"),
           ],
@@ -134,16 +166,15 @@ class _AccountState extends State<Account> {
   Future<void> _loadSaved() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     id_per = prefs.getString('id_per');
-
   }
-
   Future<void> logout(BuildContext context) async {
     final respone = await http.get(Uri.parse(URL_LOGOUT));
     if (respone.statusCode == 200) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool("is_logout", true);
+      Navigator.pop(context);
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => LoginScreen()));
+          context, MaterialPageRoute(builder: (context) => Login_Screen_new()));
     }
   }
 
