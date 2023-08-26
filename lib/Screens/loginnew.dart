@@ -392,7 +392,7 @@ class _Login_Screen_newState extends State<Login_Screen_new> {
                         )),
                     child: _isObscure != false
                         ? Text(
-                            'Xem',
+                            'Hiện',
                             textAlign: TextAlign.center,
                             style: GoogleFonts.inter(
                               fontSize: 12.0,

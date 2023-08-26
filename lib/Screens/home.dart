@@ -39,6 +39,7 @@ class _HomePageUserState extends State<HomePageUser> {
   String? rollcall_time;
   int timecheck = 5;
   int time_delay = 0;
+  bool check =true;
   @override
   void dispose() {
     super.dispose();
@@ -104,7 +105,7 @@ class _HomePageUserState extends State<HomePageUser> {
                     child: Text.rich(TextSpan(children: [
                       TextSpan(
                           text: "5 Châu Media ",
-                          style: TextStyle(color: Colors.blue,fontSize: 16)),
+                          style: TextStyle(color: Colors.blue, fontSize: 16)),
                       TextSpan(
                           text:
                               "chúc bạn 1 ngày làm việc vui vẻ mời bạn chấm công bằng khuôn mặt hoặc QR")
@@ -112,10 +113,6 @@ class _HomePageUserState extends State<HomePageUser> {
                   ),
                   CustomButtonRollcall(
                     ontapface: () async {
-                      //          NotificationMana
-                      // zger().simpleNotificationShow();
-                      // NotificationService().showNotification(title: "hihi",body: "hihi");
-                      // getWifiInfo();
                       CherryToast.warning(title: Text("Đang update!"))
                           .show(context);
                       playBeepWarning();
@@ -133,6 +130,7 @@ class _HomePageUserState extends State<HomePageUser> {
                         checking_dialog(h);
                         await getcalculateDistance();
                         await checkmac();
+                        if (check){
                         if (mounted != false) Navigator.pop(context);
                         if (distance <= meter && mac_check == true) {
                           _scanQRCode();
@@ -143,6 +141,8 @@ class _HomePageUserState extends State<HomePageUser> {
                         } else if (mac_check == false && distance > meter) {
                           error_wifi_distance_dialog(h);
                         }
+                        }
+                        check = true;
                       }
                     },
                   ),
@@ -213,7 +213,6 @@ class _HomePageUserState extends State<HomePageUser> {
 
   Future<double> _calculateDistance() async {
     var data = await _networkRequest.getLocation();
-    // print(data);
     meter = data['meter'];
     double fixedLatitude = double.parse(data['latitude']); // kinh độ
     double fixedLongitude = double.parse(data['longitude']); // vĩ độ
@@ -228,7 +227,6 @@ class _HomePageUserState extends State<HomePageUser> {
   }
 
   Future<void> getcalculateDistance() async {
-    //await _requestLocationPermission();
     double _distance = await _calculateDistance();
     Text_QR = await _networkRequest.get_Text_QR_Rollcall();
     distance = _distance.round();
@@ -255,12 +253,10 @@ class _HomePageUserState extends State<HomePageUser> {
     print("GET MAC WIFI : ${get_MAC_WIFI}");
     List<dynamic> mac = await NetworkRequest().get_MAC_WIFI();
     mac.forEach((element) {
-      //    print(element['address']);
       if (formattedMacAddress == element['address']) {
         mac_check = true;
       }
     });
-    //   print("Check MAc $mac_check");
   }
 
   Future<void> _scanQRCode() async {
@@ -270,7 +266,7 @@ class _HomePageUserState extends State<HomePageUser> {
           builder: (context) => const SimpleBarcodeScannerPage(
               scanType: ScanType.qr, cancelButtonText: "Thoát"),
         ));
-    if (!mounted) return; // Tránh xử lý sau khi widget đã bị hủy.
+    if (!mounted) return; 
     print("QR res :$scanResult");
     if (scanResult == Text_QR && mac_check == true) {
       showDialog(
@@ -329,24 +325,33 @@ class _HomePageUserState extends State<HomePageUser> {
 
   void checking_dialog(double h) {
     showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (context) {
         return AlertDialog(
-          content: Container(
-              height: h * 0.4,
-              child: Column(
-                children: [
-                  Lottie.asset("assets/lottie/checkinglocation.json"),
-                  Text("Đang kiểm tra vị trí và Wifi của bạn.",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15))
-                ],
-              )),
+          content: Stack(
+            children: [
+              Container(
+                  height: h * 0.4,
+                  child: Column(
+                    children: [
+                      Lottie.asset("assets/lottie/checkinglocation.json"),
+                      Text("Đang kiểm tra vị trí và Wifi của bạn.",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 15))
+                    ],
+                  )),
+              Positioned(bottom: 0,right: 0 ,child: TextButton(onPressed: () {
+                  Navigator.pop(context);
+                  check = false;
+                },child: Text("Thoát"),),
+              )
+            ],
+          ),
         );
       },
     );
   }
-
   void error_distance_dialog(double h) {
     showDialog(
       context: context,

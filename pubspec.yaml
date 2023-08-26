@@ -62,7 +62,7 @@ dependencies:
   flutter_svg: ^2.0.7
 
 icons_launcher:
-  image_path: "assets/logo5chau.png"
+  image_path: "assets/5chau.png"
   platforms:
     android:
       enable: true

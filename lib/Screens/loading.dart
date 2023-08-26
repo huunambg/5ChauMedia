@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:personnel_5chaumedia/Screens/loginnew.dart';
 import '/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'login.dart';
 import 'root.dart';
 
 class Loading extends StatefulWidget {
@@ -49,7 +48,7 @@ class _LoadingState extends State<Loading> {
           await prefs.setString('id_personnel', data3[0]['personnel_id']);
           await prefs.setString('email',data['email']);
           
-          print(jsonDecode(response.body));
+        //  print(jsonDecode(response.body));
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => RootUser()),

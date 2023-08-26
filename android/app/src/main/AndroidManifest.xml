@@ -7,7 +7,7 @@
     <uses-feature android:name="android.hardware.wifi" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <application
-        android:label="5 Chau Media"
+        android:label="5 Châu Media"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
