@@ -47,7 +47,6 @@ class _Notification_ScreenState extends State<Notification_Screen> {
          });
     });
   }
-
   bool check(int id) {
     bool res = false;
     data_checked.forEach((item) {
@@ -125,18 +124,20 @@ class _Notification_ScreenState extends State<Notification_Screen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      "📢 ${snapshot.data?[index]['title']}",
-                                      style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),
-                                    ),
-                                    Container(
-                                      width: w* 0.6,
-                                      padding: EdgeInsets.only(right: 10),
-                                      height: h*0.1,
-                                      child: TruncateText(
-                                          "${snapshot.data?[index]['content']}.",
-                                          maxLength: 120),
-                                    )
+                                Container(
+                                  width: w*0.7,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      TruncateText_Bold( "📢 ${snapshot.data?[index]['title']}", maxLength: 60, size: 15),
+                                      SizedBox(height: 7,),
+                                          TruncateText(
+                                                "${snapshot.data?[index]['content']}.",
+                                                maxLength: 100),
+                                    ],
+                                  ),
+                                ),
+                                    
                                   ],
                                 ),
          

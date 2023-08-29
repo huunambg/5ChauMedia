@@ -1,8 +1,8 @@
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:personnel_5chaumedia/Models/datauser.dart';
 import 'package:personnel_5chaumedia/Services/networks.dart';
 import 'package:personnel_5chaumedia/Services/notification.dart';
@@ -45,6 +45,13 @@ class _RootUserState extends State<RootUser> {
 
 FirebaseMessaging messaging = FirebaseMessaging.instance; 
 
+  Future<void> _requestNotificationPermission() async {
+    var status = await Permission.notification.request();
+    if (status.isDenied) {
+      print("Bạn phai cấp quyền vị trí");
+    }
+  }
+
 void permison()async{
     NotificationSettings settings = await messaging.requestPermission(
     alert: true,
@@ -59,25 +66,26 @@ void permison()async{
 
   @override
  void initState(){
-    super.initState();   
+  
+    super.initState();  
     NotificationService().initNotification();
    context.read<Wifi_Provider>().setname(null);
     _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
     _firebaseMessaging.subscribeToTopic('Personnel');
     permison();
-
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       print('Received a foreground message: ${message.notification?.body}');
            NotificationService().showNotification(title: message.notification?.title,body: message.notification?.body);
       context
           .read<Notification_Provider>()
-          .set_count_notification_not_checked();
+    .set_count_notification_not_checked();
     });
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('Message clicked from background: ${message.notification?.body}');
     });
+      _requestNotificationPermission();
     load_save();
   }
 
@@ -154,7 +162,7 @@ void permison()async{
                                 width: 13,
                                 height: 13,
                                 decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
+shape: BoxShape.circle,
                                   color: Colors.red,
                                 ),
                                 child: Text(

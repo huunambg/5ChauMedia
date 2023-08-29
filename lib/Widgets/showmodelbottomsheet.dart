@@ -77,7 +77,7 @@ class _CusstomshowModalBottomSheetChiTietState
                             border: Border(
                                 bottom: BorderSide(
                                     color: Color.fromARGB(66, 218, 203, 203)))),
-                        child: Text("Tiêu đề: ${widget.title}"),
+                        child: Text("Tiêu đề: ${widget.title}",style: TextStyle(fontWeight: FontWeight.bold),),
                       ),
                       Container(
                           padding: EdgeInsets.only(top: 7, left: 15, right: 30),

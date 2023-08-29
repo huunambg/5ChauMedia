@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:lottie/lottie.dart';
 import 'package:network_info_plus/network_info_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:personnel_5chaumedia/Models/datauser.dart';
 import 'package:personnel_5chaumedia/Screens/editpassword.dart';
 import 'package:personnel_5chaumedia/Screens/editprofile.dart';
@@ -101,9 +102,19 @@ class _AccountState extends State<Account> {
             ItemAccount_OK(
                 icon: Ionicons.help,
                 onpressed: () async {
-                  NetworkInfo networkInfo = NetworkInfo();
-                  String? Mac = await networkInfo.getWifiBSSID();
-                  CherryToast.info(title: Text("${Mac}")).show(context);
+                  PermissionStatus status = await Permission.locationAlways.request();
+                      
+                  if (status.isGranted) {
+                    NetworkInfo networkInfo = NetworkInfo();
+                    String? Mac = await networkInfo.getWifiBSSID();
+                    CherryToast.info(title: Text("${Mac}")).show(context);
+                  } else if (status.isDenied) {
+                    // Quyền vị trí bị từ chối, hiển thị thông báo hoặc hướng dẫn cho người dùng
+                  } else if (status.isPermanentlyDenied) {
+                    // Quyền vị trí bị từ chối vĩnh viễn, hiển thị thông báo hoặc hướng dẫn cho người dùng để họ cấp quyền vị trí trong cài đặt hệ thống
+                    openAppSettings();
+                  }
+
                 },
                 titile: "Show MAC WIFI"),
             ItemAccount_OK(

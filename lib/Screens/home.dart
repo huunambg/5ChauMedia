@@ -3,9 +3,9 @@ import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:location/location.dart';
 import 'package:lottie/lottie.dart';
 import 'package:network_info_plus/network_info_plus.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:simple_barcode_scanner/enum.dart';
 import '/Models/datauser.dart';
 import '/Models/detailrollcall.dart';
@@ -39,12 +39,11 @@ class _HomePageUserState extends State<HomePageUser> {
   String? rollcall_time;
   int timecheck = 5;
   int time_delay = 0;
-  bool check =true;
+  bool check = true;
   @override
   void dispose() {
     super.dispose();
   }
-
   String? id_personnel, id_rollcall;
   NetworkRequest _networkRequest = new NetworkRequest();
   var data;
@@ -53,12 +52,30 @@ class _HomePageUserState extends State<HomePageUser> {
   int? leave_permission;
   int? leave_without_permission;
   int? time;
+  Location location = Location();
+
   @override
   void initState() {
     super.initState();
-    _requestLocationPermission();
+    checkLocationPermission();
     Statistical(null, null);
     get_data_current_day();
+  }
+
+Future<void> checkLocationPermission() async {
+    bool serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
+      }
+    }
+
+    PermissionStatus permissionGranted = await location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
+      }
+    }
   }
 
   void getWifiInfo() async {
@@ -74,22 +91,15 @@ class _HomePageUserState extends State<HomePageUser> {
     context.read<Wifi_Provider>().setname(null);
     context.read<Location_Provider>().set__curren_address();
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    id_personnel = prefs.getString('id_personnel')!;
+   id_personnel = prefs.getString('id_personnel')!;
     await context.read<DetailRollCallUser_Provider>().set_Data_Day_OneDay();
     context.read<Notification_Provider>().set_count_notification_not_checked();
     context.read<DetailRollCallUser_Provider>().set_break_time_rollcall();
   }
 
-  Future<void> _requestLocationPermission() async {
-    var status = await Permission.notification.request();
-    if (status.isDenied) {
-      print("Bạn phai cấp quyền vị trí");
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    //double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Scaffold(
@@ -127,26 +137,27 @@ class _HomePageUserState extends State<HomePageUser> {
                             .show(context);
                         playBeepWarning();
                       } else {
-                        checking_dialog(h);
-                        await getcalculateDistance();
-                        await checkmac();
-                        if (check){
-                        if (mounted != false) Navigator.pop(context);
-                        if (distance <= meter && mac_check == true) {
-                          _scanQRCode();
-                        } else if (mac_check == true && distance > meter) {
-                          error_distance_dialog(h);
-                        } else if (mac_check == false && distance <= meter) {
-                          error_wifi_dialog(h);
-                        } else if (mac_check == false && distance > meter) {
-                          error_wifi_distance_dialog(h);
-                        }
-                        }
-                        check = true;
+                          checking_dialog(h);
+                          await getcalculateDistance();
+                          await checkmac();
+                          if (check) {
+                            if (mounted != false) Navigator.pop(context);
+                            if (distance <= meter && mac_check == true) {
+                              _scanQRCode();
+                            } else if (mac_check == true && distance > meter) {
+                              error_distance_dialog(h);
+                            } else if (mac_check == false &&
+                                distance <= meter) {
+                              error_wifi_dialog(h);
+                            } else if (mac_check == false && distance > meter) {
+                              error_wifi_distance_dialog(h);
+                            }
+                          }
+                          check = true;
                       }
                     },
                   ),
-                  SizedBox(
+SizedBox(
                     height: 20,
                   ),
                   CustomDetailHome(
@@ -217,7 +228,7 @@ class _HomePageUserState extends State<HomePageUser> {
     double fixedLatitude = double.parse(data['latitude']); // kinh độ
     double fixedLongitude = double.parse(data['longitude']); // vĩ độ
     Position currentPosition = await Geolocator.getCurrentPosition();
-    double distance = await Geolocator.distanceBetween(
+double distance = await Geolocator.distanceBetween(
       currentPosition.latitude,
       currentPosition.longitude,
       fixedLatitude,
@@ -266,7 +277,7 @@ class _HomePageUserState extends State<HomePageUser> {
           builder: (context) => const SimpleBarcodeScannerPage(
               scanType: ScanType.qr, cancelButtonText: "Thoát"),
         ));
-    if (!mounted) return; 
+    if (!mounted) return;
     print("QR res :$scanResult");
     if (scanResult == Text_QR && mac_check == true) {
       showDialog(
@@ -305,7 +316,7 @@ class _HomePageUserState extends State<HomePageUser> {
         }
       } else if (time_delay > 0) {
         Navigator.pop(context);
-        CherryToast.error(
+CherryToast.error(
           title: Text(
             "Bạn phải chờ $time_delay phút để điểm danh",
           ),
@@ -341,10 +352,16 @@ class _HomePageUserState extends State<HomePageUser> {
                               fontWeight: FontWeight.bold, fontSize: 15))
                     ],
                   )),
-              Positioned(bottom: 0,right: 0 ,child: TextButton(onPressed: () {
-                  Navigator.pop(context);
-                  check = false;
-                },child: Text("Thoát"),),
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    check = false;
+                  },
+                  child: Text("Thoát"),
+                ),
               )
             ],
           ),
@@ -352,6 +369,7 @@ class _HomePageUserState extends State<HomePageUser> {
       },
     );
   }
+
   void error_distance_dialog(double h) {
     showDialog(
       context: context,
@@ -407,8 +425,7 @@ class _HomePageUserState extends State<HomePageUser> {
       },
     );
   }
-
-  void error_wifi_distance_dialog(double h) {
+void error_wifi_distance_dialog(double h) {
     showDialog(
       context: context,
       builder: (context) {
