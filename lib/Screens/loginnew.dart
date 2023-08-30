@@ -24,13 +24,14 @@ class _Login_Screen_newState extends State<Login_Screen_new> {
   bool _rememberMe = false;
   NetworkRequest x = new NetworkRequest();
   AudioPlayer player = AudioPlayer();
-    bool _isValidEmail = true;
+  bool _isValidEmail = true;
   void _validateEmail(String input) {
     final emailRegExp = RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
     setState(() {
       _isValidEmail = emailRegExp.hasMatch(input);
     });
   }
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -86,20 +87,38 @@ class _Login_Screen_newState extends State<Login_Screen_new> {
           await prefs.remove('password');
           await prefs.remove('rememberMe');
         }
+
         var data = jsonDecode(response.body)['user'];
         var data2 = jsonDecode(response.body)['id_per'][0];
-        await prefs.setString('id_per', data2['id'].toString());
-        await prefs.setString('user_name', data['name'].toString());
-        await prefs.setString('email', data['email']);
-        //  print(jsonDecode(response.body));
         var data3 = jsonDecode(response.body)['pid'];
-        await prefs.setString('id_personnel', data3[0]['personnel_id']);
-        await prefs.setString(
-            'phone', jsonDecode(response.body)['phone'][0]['phone']);
+        print(jsonDecode(response.body));
+        String id_per = data2['id'].toString();
+        String user_name = data['name'].toString();
+        String email = data['email'];
+        String id_personnel = data3[0]['id'];
+        String phone =
+            jsonDecode(response.body)['phone'][0]['phone'].toString();
+        String id_company = data['company_id'];
+        String company_name = jsonDecode(response.body)['company'];
+        String department_name= jsonDecode(response.body)['department'];
+        // print(
+        //     "Phone $phone id_personnel: $id_personnel email $email ,user_name :$user_name ,id_per: $id_per  ,company_id :$id_company");
+        await prefs.setString('id_per', id_per);
+        await prefs.setString('user_name', user_name);
+        await prefs.setString('email', email);
+        await prefs.setString('id_personnel', id_personnel);
+        await prefs.setString('phone', phone);
+        await prefs.setString('company_id', id_company);
+       await prefs.setString('company_name', company_name);
+        await prefs.setString('department', department_name);
         // Chuyển đến màn hình chính hoặc màn hình tiếp theo
+
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => RootUser()),
+          MaterialPageRoute(
+              builder: (context) => RootUser(
+                    id_company: '$id_company',
+                  )),
         );
       } else {
         Navigator.pop(context);
@@ -125,6 +144,7 @@ class _Login_Screen_newState extends State<Login_Screen_new> {
       }
     } catch (error) {
       // Xảy ra lỗi kết nối
+      print(error);
       Navigator.pop(context);
       showDialog(
         context: context,
@@ -156,7 +176,7 @@ class _Login_Screen_newState extends State<Login_Screen_new> {
           height: size.height,
           decoration: const BoxDecoration(
               gradient: RadialGradient(colors: [
-            Color.fromRGBO(33, 137, 156, 0.15),
+            Color.fromRGBO(119, 210, 226, 0.149),
             Colors.white,
           ], center: Alignment.topRight, radius: 0.8)),
           child: Padding(
@@ -174,10 +194,8 @@ class _Login_Screen_newState extends State<Login_Screen_new> {
                         height: size.height * 0.02,
                       ),
                       logo(size.height / 8, size.height / 8),
-                      SizedBox(
-                        height: size.height * 0.04,
-                      ),
-                      richText(20.42),
+    
+                  
                     ],
                   ),
                 ),
@@ -228,11 +246,8 @@ class _Login_Screen_newState extends State<Login_Screen_new> {
   }
 
   Widget logo(double height_, double width_) {
-    return SvgPicture.asset(
-      'assets/icons/logo2.svg',
-      height: height_,
-      width: width_,
-      color: Colors.deepPurpleAccent,
+    return Image.asset(
+      'assets/images/logo_5chaumedia_login.png',
     );
   }
 
@@ -283,7 +298,7 @@ class _Login_Screen_newState extends State<Login_Screen_new> {
                 : const Color.fromRGBO(44, 185, 176, 1),
             size: 16,
           ),
-       //     errorText: _isValidEmail ? null : 'Enter a valid email',
+          //     errorText: _isValidEmail ? null : 'Enter a valid email',
           hintText: 'Nhập email',
           hintStyle: GoogleFonts.inter(
             fontSize: 16.0,
@@ -305,7 +320,7 @@ class _Login_Screen_newState extends State<Login_Screen_new> {
                       ? Colors.transparent
                       : const Color(0xFF21899C))),
           border: InputBorder.none,
-          suffix: _isValidEmail !=true
+          suffix: _isValidEmail != true
               ? null
               : Container(
                   alignment: Alignment.center,
@@ -324,8 +339,7 @@ class _Login_Screen_newState extends State<Login_Screen_new> {
                         ),
                 ),
         ),
-        onChanged:_validateEmail,
-        
+        onChanged: _validateEmail,
       ),
     );
   }

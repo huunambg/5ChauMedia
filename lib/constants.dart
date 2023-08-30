@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
- const String SERVER_NAME ='qlns.5chaumedia.com/api';
-// const String SERVER_NAME ='ac2d-27-73-58-62.ngrok-free.app/qlnhansu-api5/public/api';
+//  const String SERVER_NAME ='qlns.5chaumedia.com/api';
+const String SERVER_NAME ='ba8c-27-73-58-62.ngrok-free.app/qlnhansu-api5-v2/public/api';
 const String URL_LOGIN = 'https://$SERVER_NAME/login';
 const String URL_LOGOUT = 'https://$SERVER_NAME/logout';
 const String URL_PERSONNEL = 'https://$SERVER_NAME/personnel';
@@ -10,7 +10,6 @@ const String URL_STATISTICAL_BY_MONTH ='https://$SERVER_NAME/get-personnel-rollc
 const String URL_STATISTICAL_BY_MONTH_YEAR ='https://$SERVER_NAME/get-personnel-rollcall/';
 const String URL_ROLLCALL_PERSONNEL_EDIT ='https://$SERVER_NAME/rollcall-detail/';
 const String URL_PERSONNEL_REGISTER ='http://$SERVER_NAME/register/';
-const String URL_PUSH_NOTIFICATION ='https://fcm.googleapis.com/fcm/send';
 const String URL_GETLOCATION="https://$SERVER_NAME/getlocation";
 const List<Color> btlogin_color= [Color(0xFF7F67BE), Color(0xFF4F378B)];
 const String URL_GET_ROLLCALL_DETAIL_DAY_ONE_DAY="https://$SERVER_NAME/get_rollcall_detail_day_one_day/";
@@ -26,3 +25,4 @@ const String URL_GET_WIFI_MAC_ADDRESS="https://$SERVER_NAME/get-mac-address";
 const String URL_EDIT_EDITIMG="https://$SERVER_NAME/personnel/";
 const String URL_GET_BASE64_IMG="https://$SERVER_NAME/get-img/";
 const String URL_EDIT_PROFILE="https://$SERVER_NAME/personnel/";
+// const String URL_GET_ID_COMPANY="https://$SERVER_NAME/personnel/";

@@ -47,19 +47,18 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       home: AnimatedSplashScreen(
-        splashIconSize: 210,
-        splash: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SvgPicture.asset(
-              'assets/icons/logo2.svg',
-              color: Colors.deepPurpleAccent,
-              height: MediaQuery.of(context).size.height*0.2,
-              width: MediaQuery.of(context).size.height*0.2,
+        backgroundColor:  Color.fromRGBO(206, 237, 243, 1),
+        splashIconSize: 350,
+        splash: Center(
+          child: Container(
+            
+            padding: EdgeInsets.only(left: 16,right: 16),
+            child: Column(
+              children: [
+               Image.asset("assets/images/5chau_splash.png")
+              ],
             ),
-           
-           richText(25)
-          ],
+          ),
         ),
         nextScreen: Loading(),
         duration: 3000,

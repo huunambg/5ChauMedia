@@ -2,12 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import '/Services/networks.dart';
 import 'package:permission_handler/permission_handler.dart';
 class Location_Provider extends ChangeNotifier {
 
   String _curren_address ="";
-  int?  _distance ;
+  // int?  _distance ;
   int? _meter ;
   void set__curren_address()async{
     //_curren_address ="khong thay";
@@ -26,6 +25,7 @@ class Location_Provider extends ChangeNotifier {
         if (statusalway.isDenied) {
       print("Bạn phai cấp quyền vị trí");
     }
+
   }
   Future<String> getAddressFromCoordinates() async {
     await _requestLocationPermission();
@@ -58,23 +58,23 @@ class Location_Provider extends ChangeNotifier {
     }
   }
 
-  void set_calculateDistance_meter ()async{
-    var data = await NetworkRequest().getLocation();
-    _meter = data['meter'];
-    double fixedLatitude = double.parse(data['latitude']); // kinh độ
-    double fixedLongitude = double.parse(data['longitude']); // vĩ độ
-    Position currentPosition = await Geolocator.getCurrentPosition();
-    double distance = await Geolocator.distanceBetween(
-      currentPosition.latitude,
-      currentPosition.longitude,
-      fixedLatitude,
-      fixedLongitude,
-    );
-    _distance  = distance.round();
-    notifyListeners();
-  }
+  // void set_calculateDistance_meter (String id)async{
+  //   var data = await NetworkRequest().getLocation(id);
+  //   _meter = data['meter'];
+  //   double fixedLatitude = double.parse(data['latitude']); // kinh độ
+  //   double fixedLongitude = double.parse(data['longitude']); // vĩ độ
+  //   Position currentPosition = await Geolocator.getCurrentPosition();
+  //   double distance = await Geolocator.distanceBetween(
+  //     currentPosition.latitude,
+  //     currentPosition.longitude,
+  //     fixedLatitude,
+  //     fixedLongitude,
+  //   );
+  //   _distance  = distance.round();
+  //   notifyListeners();
+  // }
 
-  distance ()=>_distance;
+  // distance ()=>_distance;
   meter ()=>_meter;
 
 }

@@ -2,6 +2,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:personnel_5chaumedia/Models/datauser.dart';
 import '/Models/notification.dart';
 import '/Models/settings.dart';
 import '/Services/networks.dart';
@@ -41,7 +42,7 @@ class _Notification_ScreenState extends State<Notification_Screen> {
     super.initState();
     fetch_data();
         FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-          await NetworkRequest().fetchData_Notification();
+          await NetworkRequest().fetchData_Notification(context.read<DataUser_Provider>().id_personnel().toString());
          setState(() {
            
          });
@@ -67,7 +68,7 @@ class _Notification_ScreenState extends State<Notification_Screen> {
               Color(context.watch<Setting_Provider>().background_color()),
           appBar: CustomAppBar(context),
           body: FutureBuilder(
-            future: NetworkRequest().fetchData_Notification(),
+            future: NetworkRequest().fetchData_Notification(context.read<DataUser_Provider>().id_personnel().toString()),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return ListView.builder(
@@ -100,7 +101,7 @@ class _Notification_ScreenState extends State<Notification_Screen> {
                       child: Container(
                         alignment: Alignment.topCenter,
                         padding: EdgeInsets.all(10),
-                        height: h * 0.17,
+                        height: h * 0.185,
                         decoration: BoxDecoration(
                        border: Border(bottom: BorderSide(color: Color.fromARGB(255, 172, 163, 163))),
                           // boxShadow: [
@@ -130,10 +131,10 @@ class _Notification_ScreenState extends State<Notification_Screen> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       TruncateText_Bold( "📢 ${snapshot.data?[index]['title']}", maxLength: 60, size: 15),
-                                      SizedBox(height: 7,),
+                                      SizedBox(height: 5,),
                                           TruncateText(
                                                 "${snapshot.data?[index]['content']}.",
-                                                maxLength: 100),
+                                                maxLength: 140),
                                     ],
                                   ),
                                 ),

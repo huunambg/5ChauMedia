@@ -17,7 +17,7 @@ AppBar CustomAppBar(BuildContext context) {
           children: [
             Text("${context.watch<DataUser_Provider>().name_personnel()}"),
             Text(
-              "Nhân viên chính thức - Công ty 5 Châu Media",
+              "Công ty ${context.watch<DataUser_Provider>().company_name()} - ${context.watch<DataUser_Provider>().department_name()}",
               style: TextStyle(
                   fontSize: 13, color: Color.fromARGB(255, 110, 107, 107)),
             )

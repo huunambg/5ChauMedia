@@ -28,6 +28,7 @@ class HomePageUser extends StatefulWidget {
   State<HomePageUser> createState() => _HomePageUserState();
 }
 
+
 class _HomePageUserState extends State<HomePageUser> {
   String? id_per;
   String? current_address, Text_QR;
@@ -44,7 +45,6 @@ class _HomePageUserState extends State<HomePageUser> {
   void dispose() {
     super.dispose();
   }
-  String? id_personnel, id_rollcall;
   NetworkRequest _networkRequest = new NetworkRequest();
   var data;
   int? working_day;
@@ -90,11 +90,9 @@ Future<void> checkLocationPermission() async {
   Future<void> get_data_current_day() async {
     context.read<Wifi_Provider>().setname(null);
     context.read<Location_Provider>().set__curren_address();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-   id_personnel = prefs.getString('id_personnel')!;
     await context.read<DetailRollCallUser_Provider>().set_Data_Day_OneDay();
     context.read<Notification_Provider>().set_count_notification_not_checked();
-    context.read<DetailRollCallUser_Provider>().set_break_time_rollcall();
+    context.read<DetailRollCallUser_Provider>().set_break_time_rollcall(context.read<DataUser_Provider>().id_personnel().toString());
   }
 
 
@@ -114,7 +112,7 @@ Future<void> checkLocationPermission() async {
                     padding: const EdgeInsets.all(7.0),
                     child: Text.rich(TextSpan(children: [
                       TextSpan(
-                          text: "5 Châu Media ",
+                          text: "${context.watch<DataUser_Provider>().company_name()} ",
                           style: TextStyle(color: Colors.blue, fontSize: 16)),
                       TextSpan(
                           text:
@@ -209,7 +207,6 @@ SizedBox(
       working_day = data['working_day'];
       total_working_day = data['total_working_day'];
       leave_permission = data['leave_permission'];
-      id_rollcall = data["rollcall_id"];
       time = data['total_working_time'];
       leave_without_permission = data['leave_without_permission'];
     } else {
@@ -223,25 +220,28 @@ SizedBox(
   }
 
   Future<double> _calculateDistance() async {
-    var data = await _networkRequest.getLocation();
-    meter = data['meter'];
-    double fixedLatitude = double.parse(data['latitude']); // kinh độ
-    double fixedLongitude = double.parse(data['longitude']); // vĩ độ
+    var data3 = await _networkRequest.getLocation(context.read<DataUser_Provider>().id_personnel().toString());
+    print(data3);
+    meter = data3['meter'];
+    double fixedLatitude = double.parse(data3['latitude']); // kinh độ
+    double fixedLongitude = double.parse(data3['longitude']); // vĩ độ
     Position currentPosition = await Geolocator.getCurrentPosition();
-double distance = await Geolocator.distanceBetween(
+     double distance = await Geolocator.distanceBetween(
       currentPosition.latitude,
       currentPosition.longitude,
       fixedLatitude,
       fixedLongitude,
     );
+
+    print("lat${currentPosition.latitude}  long ${currentPosition.longitude}");
     return distance;
   }
 
   Future<void> getcalculateDistance() async {
     double _distance = await _calculateDistance();
-    Text_QR = await _networkRequest.get_Text_QR_Rollcall();
     distance = _distance.round();
     print("Distance : $distance");
+    Text_QR = await _networkRequest.get_Text_QR_Rollcall(context.read<DataUser_Provider>().id_personnel().toString());
     if (mounted) {
       setState(() {});
     }
@@ -261,12 +261,13 @@ double distance = await Geolocator.distanceBetween(
       }
     }
     String formattedMacAddress = formattedMacParts.join(":");
-    print("GET MAC WIFI : ${get_MAC_WIFI}");
-    List<dynamic> mac = await NetworkRequest().get_MAC_WIFI();
+  //  print("GET MAC WIFI : ${formattedMacAddress}");
+    List<dynamic> mac = await NetworkRequest().get_MAC_WIFI(context.read<DataUser_Provider>().id_personnel().toString());
     mac.forEach((element) {
       if (formattedMacAddress == element['address']) {
         mac_check = true;
       }
+      //print("${element['address']}");
     });
   }
 
@@ -479,9 +480,4 @@ void error_wifi_distance_dialog(double h) {
     await player.play(AssetSource("sounds/warning.mp3"));
   }
 
-  Future<void> loadSaved() async {
-    String? base64_image = await NetworkRequest()
-        .get_base64_img(context.read<DataUser_Provider>().id_per());
-    context.read<DataUser_Provider>().set_base64_img(base64_image);
-  }
 }

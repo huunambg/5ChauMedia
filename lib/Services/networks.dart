@@ -13,12 +13,6 @@ class NetworkRequest {
     return message;
   }
 
-  // List<Personnel> parsePersonnel(String responseBody) {
-  //   var list = json.decode(responseBody)["personnel"] as List<dynamic>;
-  //   List<Personnel> personnel =
-  //       list.map((model) => Personnel.fromJson(model)).toList();
-  //   return personnel;
-  // }
 
   Future<dynamic> Detaill_Rollcall_By_Month(String? id) async {
     final response = await http.get(
@@ -41,7 +35,7 @@ class NetworkRequest {
     );
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body)['data2'];
-      print("Length : $data");
+     // print("Length : $data");
       return data;
     } else
       return "Error";
@@ -73,10 +67,10 @@ class NetworkRequest {
       return "Error";
   }
 
-  Future getLocation() async {
-    final response = await http.get(Uri.parse(URL_GETLOCATION));
-    // print(jsonDecode(response.body)['personnel'][0]);
-    return jsonDecode(response.body)['personnel'][0];
+  Future getLocation(String? id) async {
+    final response = await http.get(Uri.parse('$URL_GETLOCATION/$id'));
+  //   print(jsonDecode(response.body)['personnel'][0]);
+    return jsonDecode(response.body)['personnel'];
   }
 
   Future<dynamic> getdataRollcall_detail_day_one_day(
@@ -90,10 +84,11 @@ class NetworkRequest {
       return null;
   }
 
-  Future<dynamic> fetchData_Notification() async {
-    final response = await http.get(Uri.parse('$URL_GET_NOTIFICATION'));
+  Future<dynamic> fetchData_Notification(String? id) async {
+    final response = await http.get(Uri.parse('$URL_GET_NOTIFICATION/$id'));
 
     if (response.statusCode == 200) {
+   //   print(List.from(jsonDecode(response.body)['data'].reversed.toList()));
       return List.from(jsonDecode(response.body)['data'].reversed.toList());
     } else if (response.statusCode == 404) {
       return [];
@@ -114,10 +109,10 @@ class NetworkRequest {
     final response =
         await http.get(Uri.parse('${URL_GET_NOTIFICATION_CHECKED}$id')); //
     if (response.statusCode == 200) {
-      // print(jsonDecode(response.body)['data']);
+   //   print(jsonDecode(response.body)['data']);
       return jsonDecode(response.body)['data'];
     } else {
-      //   print("Error");
+        // print("Error");
       return [];
     }
   }
@@ -132,8 +127,8 @@ class NetworkRequest {
     }
   }
 
-  Future<String> get_Text_QR_Rollcall() async {
-    final response = await http.get(Uri.parse('$URL_GET_TEXT_QR_ROLLCALL'));
+  Future<String> get_Text_QR_Rollcall(String? id) async {
+    final response = await http.get(Uri.parse('$URL_GET_TEXT_QR_ROLLCALL/$id'));
     if (response.statusCode == 200) {
       // print("SUCCESS");
       //  print(jsonDecode(response.body));
@@ -181,8 +176,8 @@ class NetworkRequest {
     }
   }
 
-  Future<int> get_break_time() async {
-    final response = await http.get(Uri.parse('${URL_GET_BREAK_TIME}'));
+  Future<int> get_break_time(String? id) async {
+    final response = await http.get(Uri.parse('${URL_GET_BREAK_TIME}/$id'));
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body)['data'][0]['time'];
@@ -191,8 +186,8 @@ class NetworkRequest {
     }
   }
 
-  Future<dynamic> get_MAC_WIFI() async {
-    final response = await http.get(Uri.parse('${URL_GET_WIFI_MAC_ADDRESS}'));
+  Future<dynamic> get_MAC_WIFI(String? id) async {
+    final response = await http.get(Uri.parse('${URL_GET_WIFI_MAC_ADDRESS}/$id'));
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body)['mac'];
@@ -223,7 +218,7 @@ class NetworkRequest {
   }
 
   Future<String> edit_ProfileS(String? id,String? name,String? email,String? phone,String? pass) async {
-    final response = await http.put(Uri.parse('${URL_EDIT_PROFILE}$id/edit/'),body: {
+    final response = await http.put(Uri.parse('${URL_EDIT_PROFILE}$id/edit'),body: {
       "name":"$name",
       "email":"$email",
       "phone":"$phone",
@@ -236,4 +231,15 @@ class NetworkRequest {
       return "Error";
     }
   }
+
+  // Future<String> get_id_company(String? id) async {
+  //   final response = await http.get(Uri.parse('${URL_GET_BASE64_IMG}$id/'));
+  //   print(response.statusCode);
+  //   if (response.statusCode == 200) {
+  //     return jsonDecode(response.body)['image'];
+  //   } else {
+  //     return "Error";
+  //   }
+  // }
+
 }

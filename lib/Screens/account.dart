@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cherry_toast/cherry_toast.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
@@ -182,7 +183,11 @@ class _AccountState extends State<Account> {
     final respone = await http.get(Uri.parse(URL_LOGOUT));
     if (respone.statusCode == 200) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
+         final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
       await prefs.setBool("is_logout", true);
+      String? id_company = await prefs.getString('company_id');
+      await _firebaseMessaging.unsubscribeFromTopic("$id_company");
+      prefs.remove('company_id');
       Navigator.pop(context);
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => Login_Screen_new()));

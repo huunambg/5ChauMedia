@@ -235,11 +235,12 @@ class _ManamentRollCall_ScreenState extends State<ManamentRollCall_Screen> {
                                                             .watch<
                                                                 DetailRollCallUser_Provider>()
                                                             .data_Rollcall_MonthYear()[checkseeCurrenday ==
-                                                                true
-                                                            ? index +
-                                                                currentDay -
-                                                                1
-                                                            : index]['out1'],
+                                                                    true &&
+                                                                checkbetween == false
+                                                            ? currentDay - index - 1
+                                                            : checkseeCurrenday == false && checkbetween == false
+                                                                ? index
+                                                                : _enddate - index - 1]['out1'],
                                                         place: context
                                                             .watch<
                                                                 DetailRollCallUser_Provider>()

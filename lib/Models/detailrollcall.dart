@@ -65,8 +65,8 @@ class DetailRollCallUser_Provider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void set_break_time_rollcall() async {
-    _break_time_rollcall = await NetworkRequest().get_break_time();
+  void set_break_time_rollcall(String id) async {
+    _break_time_rollcall = await NetworkRequest().get_break_time(id);
     notifyListeners();
   }
 

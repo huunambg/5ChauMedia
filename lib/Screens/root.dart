@@ -1,3 +1,4 @@
+import 'package:cherry_toast/cherry_toast.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,7 +21,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 class RootUser extends StatefulWidget {
-  const RootUser({super.key});
+  final String id_company;
+  const RootUser({super.key, required this.id_company});
   @override
   State<RootUser> createState() => _RootUserState();
 }
@@ -48,7 +50,10 @@ FirebaseMessaging messaging = FirebaseMessaging.instance;
   Future<void> _requestNotificationPermission() async {
     var status = await Permission.notification.request();
     if (status.isDenied) {
-      print("Bạn phai cấp quyền vị trí");
+       CherryToast.warning(title: Text("Bạn chưa cấp quyền vị trí để điểm danh")).show(context);
+    }
+    else{
+      
     }
   }
 
@@ -66,13 +71,12 @@ void permison()async{
 
   @override
  void initState(){
-  
     super.initState();  
     NotificationService().initNotification();
    context.read<Wifi_Provider>().setname(null);
     _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-    _firebaseMessaging.subscribeToTopic('Personnel');
+    _firebaseMessaging.subscribeToTopic('${widget.id_company}');
     permison();
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
@@ -84,6 +88,9 @@ void permison()async{
     });
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('Message clicked from background: ${message.notification?.body}');
+      setState(() {
+        _currentindex=2;
+      });
     });
       _requestNotificationPermission();
     load_save();
@@ -162,7 +169,7 @@ void permison()async{
                                 width: 13,
                                 height: 13,
                                 decoration: BoxDecoration(
-shape: BoxShape.circle,
+                                  shape: BoxShape.circle,
                                   color: Colors.red,
                                 ),
                                 child: Text(
