@@ -72,7 +72,6 @@ class _Notification_ScreenState extends State<Notification_Screen> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return ListView.builder(
-               
                   itemCount: snapshot.data?.length,
                   itemBuilder: (context, index) {
                     return InkWell(
@@ -83,7 +82,7 @@ class _Notification_ScreenState extends State<Notification_Screen> {
                           context: context,
                           builder: (context) {
                             return CusstomshowModalBottomSheet(
-                              images: "assets/team.png",
+                              images: "assets/icons/icon2.png",
                               title: snapshot.data?[index]['title'],
                               content: snapshot.data?[index]['content'],
                               time: DateFormat("H:m:s dd/MM/yy").format(DateTime.parse(snapshot.data?[index]['created_at']).add(Duration(hours: 7))),
@@ -92,7 +91,7 @@ class _Notification_ScreenState extends State<Notification_Screen> {
                         );
                         context
                             .read<Notification_Provider>()
-                            .set_count_notification_not_checked();
+                            .set_count_notification_not_checked(context.read<DataUser_Provider>().id_personnel().toString());
                         await fetch_data();
                         if (mounted) {
                           setState(() {});
@@ -104,15 +103,6 @@ class _Notification_ScreenState extends State<Notification_Screen> {
                         height: h * 0.185,
                         decoration: BoxDecoration(
                        border: Border(bottom: BorderSide(color: Color.fromARGB(255, 172, 163, 163))),
-                          // boxShadow: [
-                          //   BoxShadow(
-                          //     color: Colors.grey.withOpacity(0.5),
-                          //     spreadRadius: 2,
-                          //     blurRadius: 5,
-                          //     offset: Offset(0,
-                          //         1), // Điều chỉnh vị trí của bóng theo trục x và y
-                          //   ),
-                          // ],
                           color: check(snapshot.data?[index]['id']) == false
                               ? Color.fromARGB(120, 206, 198, 198)
                               : Colors.white,
@@ -134,7 +124,7 @@ class _Notification_ScreenState extends State<Notification_Screen> {
                                       SizedBox(height: 5,),
                                           TruncateText(
                                                 "${snapshot.data?[index]['content']}.",
-                                                maxLength: 140),
+                                                maxLength: 130),
                                     ],
                                   ),
                                 ),

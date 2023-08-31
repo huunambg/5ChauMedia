@@ -37,12 +37,9 @@ class _CusstomshowModalBottomSheetChiTietState
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
-                        color: Color.fromARGB(255, 223, 220, 220),
+                        decoration: BoxDecoration(  color: Color.fromARGB(255, 223, 220, 220),image: DecorationImage(image: AssetImage("${widget.images}"),fit: BoxFit.cover)),
                         height: h * 0.167,
                         width: w * 0.3,
-                        child: widget.images.length < 50
-                            ? Image.asset("${widget.images}")
-                            : Image.network("${widget.images}"),
                       ),
                       IconButton(
                         onPressed: () {
@@ -72,7 +69,7 @@ class _CusstomshowModalBottomSheetChiTietState
                       Container(
                         alignment: Alignment.centerLeft,
                         padding: EdgeInsets.only(left: 15, right: 30),
-                        height: h * 0.07,
+                        height: h * 0.08,
                         decoration: BoxDecoration(
                             border: Border(
                                 bottom: BorderSide(
@@ -81,7 +78,6 @@ class _CusstomshowModalBottomSheetChiTietState
                       ),
                       Container(
                           padding: EdgeInsets.only(top: 7, left: 15, right: 30),
-                          height: h * 0.2,
                           child: Text(
                               "Nội dung: ${widget.content}")),
                     ],

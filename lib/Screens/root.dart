@@ -84,7 +84,7 @@ void permison()async{
            NotificationService().showNotification(title: message.notification?.title,body: message.notification?.body);
       context
           .read<Notification_Provider>()
-    .set_count_notification_not_checked();
+    .set_count_notification_not_checked(context.read<DataUser_Provider>().id_personnel().toString());
     });
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('Message clicked from background: ${message.notification?.body}');
@@ -195,14 +195,13 @@ void permison()async{
 
   Future<void> load_save() async {
     
-    context.read<Notification_Provider>().set_id_personnel();
-    context.read<Notification_Provider>().set_count_notification_not_checked();
+     await context.read<Notification_Provider>().set_id_personnel();
     await context.read<DataUser_Provider>().set_id_name_personnel();
+     context.read<Notification_Provider>().set_count_notification_not_checked(context.read<DataUser_Provider>().id_personnel().toString());
     String? base64_image = await NetworkRequest().get_base64_img(context.read<DataUser_Provider>().id_per());
     context.read<DataUser_Provider>().set_base64_img(base64_image);
     context.read<DataUser_Provider>().set_base64_img_edit(base64_image);
   }
-  
   final tabs = [
     HomePageUser(),
     ManamentRollCall_Screen(),

@@ -11,8 +11,8 @@ class Notification_Provider extends ChangeNotifier{
     notifyListeners();
   }
   String id_personnel()=> _id_personnel; 
-Future<void> set_count_notification_not_checked()async{
- _check_exist_Notification_visted =await NetworkRequest().get_count_notification_not_check(_id_personnel);
+Future<void> set_count_notification_not_checked(String id)async{
+ _check_exist_Notification_visted =await NetworkRequest().get_count_notification_not_check(id);
  notifyListeners();
 }
 int check_exist_Notification_visted(){

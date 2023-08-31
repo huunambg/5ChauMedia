@@ -25,7 +25,7 @@ class TruncateText_Bold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (text.length <= maxLength) {
-      return Text(text);
+      return Text(text,style: TextStyle(fontWeight: FontWeight.bold,fontSize: size));
     } else {
       String truncatedText = text.substring(0, maxLength);
       return Text('$truncatedText...',style: TextStyle(fontWeight: FontWeight.bold,fontSize: size),);

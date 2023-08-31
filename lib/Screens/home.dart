@@ -91,7 +91,6 @@ Future<void> checkLocationPermission() async {
     context.read<Wifi_Provider>().setname(null);
     context.read<Location_Provider>().set__curren_address();
     await context.read<DetailRollCallUser_Provider>().set_Data_Day_OneDay();
-    context.read<Notification_Provider>().set_count_notification_not_checked();
     context.read<DetailRollCallUser_Provider>().set_break_time_rollcall(context.read<DataUser_Provider>().id_personnel().toString());
   }
 

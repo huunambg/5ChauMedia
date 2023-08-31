@@ -208,7 +208,7 @@ class NetworkRequest {
   }
 
   Future<String> get_base64_img(String? id) async {
-    final response = await http.get(Uri.parse('${URL_GET_BASE64_IMG}$id/'));
+    final response = await http.get(Uri.parse('${URL_GET_BASE64_IMG}$id'));
     print(response.statusCode);
     if (response.statusCode == 200) {
       return jsonDecode(response.body)['image'];
@@ -231,15 +231,5 @@ class NetworkRequest {
       return "Error";
     }
   }
-
-  // Future<String> get_id_company(String? id) async {
-  //   final response = await http.get(Uri.parse('${URL_GET_BASE64_IMG}$id/'));
-  //   print(response.statusCode);
-  //   if (response.statusCode == 200) {
-  //     return jsonDecode(response.body)['image'];
-  //   } else {
-  //     return "Error";
-  //   }
-  // }
 
 }
