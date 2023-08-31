@@ -64,7 +64,7 @@ class _AccountState extends State<Account> {
                                 .base64_img())),
                             fit: BoxFit.cover,
                           )
-                        : Lottie.asset("assets/lottie/girl.json",
+                        :  Image.asset("assets/icons/ic_appbar.png",
                             fit: BoxFit.cover),
                   ),
                 ),

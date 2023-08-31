@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-//  const String SERVER_NAME ='qlns.5chaumedia.com/api';
-const String SERVER_NAME ='037f-27-73-58-62.ngrok-free.app/qlnhansu-api5-v2/public/api';
+  // const String SERVER_NAME ='cds.5chaumedia.com/api';
+ const String SERVER_NAME ='037f-27-73-58-62.ngrok-free.app/qlnhansu-api5-v2/public/api';
 const String URL_LOGIN = 'https://$SERVER_NAME/login';
 const String URL_LOGOUT = 'https://$SERVER_NAME/logout';
 const String URL_PERSONNEL = 'https://$SERVER_NAME/personnel';

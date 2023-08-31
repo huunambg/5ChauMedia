@@ -90,7 +90,7 @@ class _Edit_Profile_ScreenState extends State<Edit_Profile_Screen> {
                                       .base64_img_edit())),
                                   fit: BoxFit.cover,
                                 )
-                              : Lottie.asset("assets/lottie/girl.json",
+                              : Image.asset("assets/icons/ic_appbar.png",
                                   fit: BoxFit.cover),
                     ),
                   ),
