@@ -132,9 +132,9 @@ class _AccountState extends State<Account> {
             ItemAccount_OK(
                 icon: Icons.clear_sharp,
                 onpressed: () async {
-                  context.read<CountDown_Provider>().set_countdown(10);
+                  context.read<CountDown_Provider>().set_countdown(30);
                   bool check_click = false;
-                 await showDialog(
+                  await showDialog(
                     context: context,
                     builder: (context) {
                       return AlertDialog(
@@ -158,29 +158,7 @@ class _AccountState extends State<Account> {
                               : TextButton(
                                   onPressed: () async {
                                     Navigator.pop(context);
-                              await showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          title: Text("Xóa tài khoản"),
-                                          content: Text(
-                                              "Bạn sẽ không thể khôi phục được dữ liệu cũng như tài khoản khi đồng ý xóa bạn và sẽ bị chuyển về màn hình đăng nhập"),
-                                          actions: [
-                                            TextButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                  check_click = true;
-                                                },
-                                                child: Text("Đồng ý")),
-                                            TextButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                child: Text("Quay lại"))
-                                          ],
-                                        );
-                                      },
-                                    );
+                                    check_click=true;
                                   },
                                   child: Text("Xóa")),
                           TextButton(
@@ -199,7 +177,10 @@ class _AccountState extends State<Account> {
                       CherryToast.success(
                               title: Text("Xóa tài khoản thành công"))
                           .show(context);
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Login_Screen_new()));
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Login_Screen_new()));
                     } else {
                       CherryToast.error(title: Text("Xóa tài khoản thất bại"))
                           .show(context);
