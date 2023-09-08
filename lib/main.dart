@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:personnel_5chaumedia/Models/countdown.dart';
+import 'package:personnel_5chaumedia/Models/permission.dart';
 import 'Models/data.dart';
 import '/Models/datauser.dart';
 import '/Models/detailrollcall.dart';
@@ -32,6 +33,7 @@ void main() async {
       ChangeNotifierProvider(create: (_) => Data_Provider()),
       ChangeNotifierProvider(create: (_) => Location_Provider()),
       ChangeNotifierProvider(create: (_) =>CountDown_Provider()),
+       ChangeNotifierProvider(create: (_) =>Permission_Provider()),
     ], child: MyApp()));
   });
 }

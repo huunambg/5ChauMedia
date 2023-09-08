@@ -5,10 +5,13 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:personnel_5chaumedia/Models/permission.dart';
 import 'package:personnel_5chaumedia/Screens/admin/homeadmin.dart';
 import 'package:personnel_5chaumedia/Screens/root.dart';
 import 'package:personnel_5chaumedia/Services/networks.dart';
 import 'package:personnel_5chaumedia/constants.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Login_Screen_new extends StatefulWidget {
@@ -124,6 +127,11 @@ class _Login_Screen_newState extends State<Login_Screen_new> {
                     )),
           );
         } else {
+
+          var data_permisson = jsonDecode(response.body)['permission'];
+          context.read<Permission_Provider>().set_list_permission(data_permisson);
+
+
           String id_company = data['company_id'];
             await prefs.setString('company_id', id_company);
                     Navigator.pushReplacement(

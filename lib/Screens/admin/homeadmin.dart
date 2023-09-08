@@ -1,5 +1,7 @@
+import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:personnel_5chaumedia/Models/datauser.dart';
+import 'package:personnel_5chaumedia/Models/permission.dart';
 import 'package:personnel_5chaumedia/Screens/admin/location.dart';
 import 'package:personnel_5chaumedia/Screens/admin/mac.dart';
 import 'package:personnel_5chaumedia/Screens/loginnew.dart';
@@ -7,6 +9,7 @@ import 'package:personnel_5chaumedia/constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 class HomeAdmin extends StatefulWidget {
   const HomeAdmin({super.key});
 
@@ -14,27 +17,24 @@ class HomeAdmin extends StatefulWidget {
   State<HomeAdmin> createState() => _HomeAdminState();
 }
 
-
-
 class _HomeAdminState extends State<HomeAdmin> {
-
-@override
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
     load();
   }
 
-  void load(){
+  void load() {
     context.read<DataUser_Provider>().set_id_company();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 241, 239, 239),
+        backgroundColor: Color.fromARGB(255, 241, 239, 239),
         appBar: AppBar(
-            backgroundColor: Colors.deepPurple,
+          backgroundColor: Colors.deepPurple,
           automaticallyImplyLeading: false,
           title: Text(
             "Quản trị",
@@ -54,33 +54,70 @@ class _HomeAdminState extends State<HomeAdmin> {
               image: "assets/location.png",
               text: "Thiết lập vị trí",
               onpressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Set_Location()));
+                bool check_permiison = false;
+                context
+                    .read<Permission_Provider>()
+                    .list_permisson()
+                    .forEach((element) {
+                  if (element == "edit-location") {
+                    check_permiison = true;
+                  }
+                });
+
+                print("Check Permisson Location: $check_permiison");
+
+                if (check_permiison == true) {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Set_Location()));
+                } else {
+                  CherryToast.warning(
+                          title: Text(
+                              "Bạn không có quyền thực hiện chức năng này"))
+                      .show(context);
+                }
               },
             ),
             CustomItemHome(
               image: "assets/wifi.png",
               text: "Thiết lập Wifi",
               onpressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Set_Mac_Wifi()),
-                );
+                bool check_permiison = false;
+                context
+                    .read<Permission_Provider>()
+                    .list_permisson()
+                    .forEach((element) {
+                  if (element == "view-wifi") {
+                    check_permiison = true;
+                  }
+                });
+
+                print("Check Permisson WIfi: $check_permiison");
+
+                if (check_permiison == true) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Set_Mac_Wifi()),
+                  );
+                } else {
+                  CherryToast.warning(
+                          title: Text(
+                              "Bạn không có quyền thực hiện chức năng này"))
+                      .show(context);
+                }
               },
             ),
-              CustomItemHome(
+            CustomItemHome(
               image: "assets/logout.png",
               text: "Đăng xuất",
               onpressed: () {
-              logout(context);
+                logout(context);
               },
             )
-            
           ],
         ));
   }
 
-    Future<void> logout(BuildContext context) async {
+  Future<void> logout(BuildContext context) async {
     final respone = await http.get(Uri.parse(URL_LOGOUT));
     if (respone.statusCode == 200) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -109,7 +146,7 @@ class CustomItemHome extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         onPressed: onpressed,
         child: Container(
-          padding: EdgeInsets.only(top: 30,bottom: 30),
+          padding: EdgeInsets.only(top: 30, bottom: 30),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

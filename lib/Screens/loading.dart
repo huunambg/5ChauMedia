@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:personnel_5chaumedia/Models/permission.dart';
 import 'package:personnel_5chaumedia/Screens/admin/homeadmin.dart';
 import 'package:personnel_5chaumedia/Screens/loginnew.dart';
+import 'package:provider/provider.dart';
 import '/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'root.dart';
@@ -73,6 +75,9 @@ class _LoadingState extends State<Loading> {
                     )),
           );
         } else {
+          
+          var data_permisson = jsonDecode(response.body)['permission'];
+          context.read<Permission_Provider>().set_list_permission(data_permisson);
           String id_company = data['company_id'];
             await prefs.setString('company_id', id_company);
                     Navigator.pushReplacement(

@@ -164,7 +164,7 @@ class _AccountState extends State<Account> {
                                         return AlertDialog(
                                           title: Text("Xóa tài khoản"),
                                           content: Text(
-                                              "Bạn sẽ không thể khôi phục được dữ liệu cũng như tài khoản khi đồng ý xóa"),
+                                              "Bạn sẽ không thể khôi phục được dữ liệu cũng như tài khoản khi đồng ý xóa bạn và sẽ bị chuyển về màn hình đăng nhập"),
                                           actions: [
                                             TextButton(
                                                 onPressed: () {
@@ -199,7 +199,7 @@ class _AccountState extends State<Account> {
                       CherryToast.success(
                               title: Text("Xóa tài khoản thành công"))
                           .show(context);
-                      logout(context);
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Login_Screen_new()));
                     } else {
                       CherryToast.error(title: Text("Xóa tài khoản thất bại"))
                           .show(context);
