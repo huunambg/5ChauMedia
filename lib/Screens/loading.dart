@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:personnel_5chaumedia/Screens/admin/homeadmin.dart';
 import 'package:personnel_5chaumedia/Screens/loginnew.dart';
 import '/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,34 +42,45 @@ class _LoadingState extends State<Loading> {
           SharedPreferences prefs = await SharedPreferences.getInstance();
            print(jsonDecode(response.body));
         var data = jsonDecode(response.body)['user'];
-        var data2 = jsonDecode(response.body)['id_per'][0];
-        var data3 = jsonDecode(response.body)['pid'];
-        String id_per = data2['id'].toString();
-        String user_name = data['name'].toString();
-        String email = data['email'];
-        String id_personnel = data3[0]['id'];
-        String phone = jsonDecode(response.body)['phone'][0]['phone'].toString();
-        String company_name = jsonDecode(response.body)['company'];
-        String department_name= jsonDecode(response.body)['department'];
-        String id_company =data['company_id'];
-        await prefs.setString('id_per', id_per);
-        await prefs.setString('user_name', user_name);
-        await prefs.setString('email', email);
-        await prefs.setString('id_personnel', id_personnel);
-        await prefs.setString(
-            'phone', phone);
-        await prefs.setString('company_id', id_company);
-        await prefs.setString('company_name', company_name);
-        await prefs.setString('department', department_name);
-        // Chuyển đến màn hình chính hoặc màn hình tiếp theo
-   
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => RootUser(
-                    id_company: '$id_company',
-                  )),
-        );
+        if (data['role'] == 'personnel') {
+          var data2 = jsonDecode(response.body)['id_per'][0];
+          var data3 = jsonDecode(response.body)['pid'];
+          String id_per = data2['id'].toString();
+          String user_name = data['name'].toString();
+          String email = data['email'];
+          String id_personnel = data3[0]['id'];
+          String phone =
+              jsonDecode(response.body)['phone'][0]['phone'].toString();
+          String id_company = data['company_id'];
+          String company_name = jsonDecode(response.body)['company'];
+          String department_name = jsonDecode(response.body)['department'];
+          // print(
+          //     "Phone $phone id_personnel: $id_personnel email $email ,user_name :$user_name ,id_per: $id_per  ,company_id :$id_company");
+          await prefs.setString('id_per', id_per);
+          await prefs.setString('user_name', user_name);
+          await prefs.setString('email', email);
+          await prefs.setString('id_personnel', id_personnel);
+          await prefs.setString('phone', phone);
+          await prefs.setString('company_id', id_company);
+          await prefs.setString('company_name', company_name);
+          await prefs.setString('department', department_name);
+          // Chuyển đến màn hình chính hoặc màn hình tiếp theo
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => RootUser(
+                      id_company: '$id_company',
+                    )),
+          );
+        } else {
+          String id_company = data['company_id'];
+            await prefs.setString('company_id', id_company);
+                    Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => HomeAdmin()),
+          );
+        }
         } else {
           // Đăng nhập thất bại
           var responseData = jsonDecode(response.body);

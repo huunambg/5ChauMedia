@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:personnel_5chaumedia/Models/datauser.dart';
+import 'package:personnel_5chaumedia/Models/location.dart';
 import 'package:personnel_5chaumedia/Services/networks.dart';
 import 'package:personnel_5chaumedia/Services/notification.dart';
 import '/Models/notification.dart';
@@ -53,7 +54,7 @@ FirebaseMessaging messaging = FirebaseMessaging.instance;
        CherryToast.warning(title: Text("Bạn chưa cấp quyền vị trí để điểm danh")).show(context);
     }
     else{
-      
+      context.read<Location_Provider>().set__curren_address();
     }
   }
 

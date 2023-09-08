@@ -698,7 +698,7 @@ class _ManamentRollCall_ScreenState extends State<ManamentRollCall_Screen> {
       decoration: TextDecoration.underline,
     );
     final config = CalendarDatePicker2WithActionButtonsConfig(
-      firstDate: DateTime(2023, 8),
+      firstDate: DateTime(2023, 9),
       lastDate: DateTime(2030),
       dayTextStyle: dayTextStyle,
       calendarType: CalendarDatePicker2Type.range,

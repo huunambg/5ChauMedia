@@ -11,6 +11,7 @@ class DataUser_Provider extends ChangeNotifier {
   String _base64_img_edit = "";
   String _company_name = "";
   String _department_name = "";
+  String _id_company="";
 
   Future<void> set_id_name_personnel() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -21,6 +22,11 @@ class DataUser_Provider extends ChangeNotifier {
     _id_per = prefs.getString('id_per')!;
     _email = prefs.getString('email')!;
     _phone = prefs.getString('phone')!;
+    notifyListeners();
+  }
+    Future<void> set_id_company() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+     _id_company =await prefs.getString("company_id")!;
     notifyListeners();
   }
 
@@ -43,4 +49,5 @@ class DataUser_Provider extends ChangeNotifier {
   String phone() => _phone;
   String company_name() => _company_name;
   String department_name() => _department_name;
+  String id_company()=>_id_company;
 }

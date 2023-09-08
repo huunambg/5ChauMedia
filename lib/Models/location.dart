@@ -29,7 +29,9 @@ class Location_Provider extends ChangeNotifier {
   }
   Future<String> getAddressFromCoordinates() async {
     await _requestLocationPermission();
-    Position currentPosition = await Geolocator.getCurrentPosition();
+    Position currentPosition = await Geolocator.getCurrentPosition(
+    desiredAccuracy: LocationAccuracy.high
+    );
     double latitude = currentPosition.latitude;
     double longitude = currentPosition.longitude;
     try {

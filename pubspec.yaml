@@ -60,6 +60,8 @@ dependencies:
   google_fonts: ^5.1.0
   flutter_svg: ^2.0.7
   location: ^5.0.3
+  google_maps_flutter: ^2.5.0
+  wifi_scan: ^0.4.0+2
 
 icons_launcher:
   image_path: "assets/icons/icon.png"

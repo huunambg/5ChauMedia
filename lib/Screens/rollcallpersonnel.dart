@@ -8,7 +8,7 @@
 // import '/Models/location.dart';
 // import '/Services/networks.dart';
 // import 'package:provider/provider.dart';
-// import 'package:qr_code_scanner/qr_code_scanner.dart';
+// import '_code_scanner/qr_code_scanner.dart';
 // import 'package:audioplayers/audioplayers.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:geolocator/geolocator.dart';

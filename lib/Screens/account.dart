@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cherry_toast/cherry_toast.dart';
@@ -5,13 +6,14 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:lottie/lottie.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:personnel_5chaumedia/Models/countdown.dart';
 import 'package:personnel_5chaumedia/Models/datauser.dart';
 import 'package:personnel_5chaumedia/Screens/editpassword.dart';
 import 'package:personnel_5chaumedia/Screens/editprofile.dart';
 import 'package:personnel_5chaumedia/Screens/loginnew.dart';
+import 'package:personnel_5chaumedia/Services/networks.dart';
 import '/Models/settings.dart';
 import '/Widgets/itemaccount.dart';
 import '/constants.dart';
@@ -64,7 +66,7 @@ class _AccountState extends State<Account> {
                                 .base64_img())),
                             fit: BoxFit.cover,
                           )
-                        :  Image.asset("assets/icons/ic_appbar.png",
+                        : Image.asset("assets/icons/ic_appbar.png",
                             fit: BoxFit.cover),
                   ),
                 ),
@@ -103,8 +105,9 @@ class _AccountState extends State<Account> {
             ItemAccount_OK(
                 icon: Ionicons.help,
                 onpressed: () async {
-                  PermissionStatus status = await Permission.locationAlways.request();
-                      
+                  PermissionStatus status =
+                      await Permission.locationAlways.request();
+
                   if (status.isGranted) {
                     NetworkInfo networkInfo = NetworkInfo();
                     String? Mac = await networkInfo.getWifiBSSID();
@@ -115,7 +118,6 @@ class _AccountState extends State<Account> {
                     // Quyền vị trí bị từ chối vĩnh viễn, hiển thị thông báo hoặc hướng dẫn cho người dùng để họ cấp quyền vị trí trong cài đặt hệ thống
                     openAppSettings();
                   }
-
                 },
                 titile: "Show MAC WIFI"),
             ItemAccount_OK(
@@ -127,6 +129,85 @@ class _AccountState extends State<Account> {
                       .set_background_color(check_color);
                 },
                 titile: "Cài đặt"),
+            ItemAccount_OK(
+                icon: Icons.clear_sharp,
+                onpressed: () async {
+                  context.read<CountDown_Provider>().set_countdown(10);
+                  bool check_click = false;
+                 await showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text("Xóa tài khoản"),
+                        content: Text("Bạn có muốn xóa tài khoản"),
+                        actionsPadding: EdgeInsets.only(left: 30, right: 30),
+                        actionsAlignment: MainAxisAlignment.spaceBetween,
+                        actions: [
+                          context
+                                      .watch<CountDown_Provider>()
+                                      .check_countdown() ==
+                                  false
+                              ? Container(
+                                  margin: EdgeInsets.only(left: 15),
+                                  height: 20,
+                                  width: 20,
+                                  child: Text(
+                                    "${context.watch<CountDown_Provider>().countdown()}",
+                                    style: TextStyle(color: Colors.red),
+                                  ))
+                              : TextButton(
+                                  onPressed: () async {
+                                    Navigator.pop(context);
+                              await showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: Text("Xóa tài khoản"),
+                                          content: Text(
+                                              "Bạn sẽ không thể khôi phục được dữ liệu cũng như tài khoản khi đồng ý xóa"),
+                                          actions: [
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                  check_click = true;
+                                                },
+                                                child: Text("Đồng ý")),
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text("Quay lại"))
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: Text("Xóa")),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text("Quay lại"))
+                        ],
+                      );
+                    },
+                  );
+                  if (check_click == true) {
+                    if (await NetworkRequest().delete_User(
+                            context.read<DataUser_Provider>().id_personnel()) ==
+                        "Success") {
+                      CherryToast.success(
+                              title: Text("Xóa tài khoản thành công"))
+                          .show(context);
+                      logout(context);
+                    } else {
+                      CherryToast.error(title: Text("Xóa tài khoản thất bại"))
+                          .show(context);
+                      logout(context);
+                    }
+                  }
+                },
+                titile: "Xóa tài khoản"),
             ItemAccount_OK(
                 icon: Ionicons.arrow_back_circle_outline,
                 onpressed: () async {
@@ -159,7 +240,7 @@ class _AccountState extends State<Account> {
                       builder: (context) {
                         return AlertDialog(
                           content: Container(
-                            height: h*0.3,
+                            height: h * 0.3,
                             child: Center(child: CircularProgressIndicator()),
                           ),
                         );
@@ -179,11 +260,12 @@ class _AccountState extends State<Account> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     id_per = prefs.getString('id_per');
   }
+
   Future<void> logout(BuildContext context) async {
     final respone = await http.get(Uri.parse(URL_LOGOUT));
     if (respone.statusCode == 200) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-         final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+      final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
       await prefs.setBool("is_logout", true);
       String? id_company = await prefs.getString('company_id');
       await _firebaseMessaging.unsubscribeFromTopic("$id_company");

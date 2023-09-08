@@ -73,6 +73,35 @@ class NetworkRequest {
     return jsonDecode(response.body)['personnel'];
   }
 
+  Future getLocation_Admin(String? id) async {
+    final response = await http.get(Uri.parse('$URL_GETLOCATION_ADMIN/$id'));
+    print(jsonDecode(response.body)['personnel']);
+    return jsonDecode(response.body)['personnel'];
+  }
+  Future update_Location_Admin(String? id,String? name,String ? lat,String? long ,String? meter) async {
+    final response = await http.put(Uri.parse('$URL_UPDATE_LOCATION_ADMIN/$id'),body: {
+      "name" :name,
+      "latitude":lat,
+      "longitude":long,
+      "meter":meter
+    });
+    print(jsonDecode(response.body)['status']);
+    return jsonDecode(response.body)['status'];
+  }
+
+
+  Future<dynamic> get_Mac_admin(String? id) async {
+    final response = await http.get(Uri.parse('$URL_GET_MAC_ADMIN$id'));
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      print(jsonDecode(response.body)['mac']);
+      return jsonDecode(response.body)['mac'];
+    } else {
+      return [];
+    }
+  }
+
+
   Future<dynamic> getdataRollcall_detail_day_one_day(
       String? month_year, String? id_per, String? day) async {
     final response = await http.get(Uri.parse(
@@ -139,30 +168,6 @@ class NetworkRequest {
     }
   }
 
-//   Future<String> getAddressFromGeocoding(double latitude, double longitude) async {
-//   String apiKey = 'AIzaSyBU_v49q9tE8N_5ri0N87otL8JVXmqNmzM'; // Thay bằng API Key của bạn
-//   String url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=$apiKey';
-
-//   try {
-//     final response = await http.get(Uri.parse(url));
-//     if (response.statusCode == 200) {
-//       Map<String, dynamic> data = json.decode(response.body);
-//          print(data);
-//       if (data['status'] == 'OK') {
-//         List<dynamic> results = data['results'];
-//         if (results.isNotEmpty) {
-//           Map<String, dynamic> addressInfo = results[0];
-//           String formattedAddress = addressInfo['formatted_address'];
-
-//           return formattedAddress;
-//         }
-//       }
-//     }
-//     return 'No address found for the given coordinates.';
-//   } catch (e) {
-//     return 'Error getting address: $e';
-//   }
-// }
 
   Future<String> get_last_rollcall(String? id_personnel) async {
     final response =
@@ -195,6 +200,37 @@ class NetworkRequest {
       return "Error";
     }
   }
+  Future<dynamic> add_MAC_WIFI(String? id,String ?wifi,String ? mac) async {
+    final response = await http.post(Uri.parse('${URL_ADD_MAC_ADMIN}$id'),body: {
+        "name":wifi,
+        "address":mac
+    });
+    if (response.statusCode == 200) {
+      return "Success";
+    } else {
+      return "Error";
+    }
+  }
+  Future<dynamic> delete_MAC_WIFI(String? id) async {
+    final response = await http.delete(Uri.parse('${URL_DET_MAC_ADMIN}$id'),body: {
+    });
+    if (response.statusCode == 200) {
+      return "Success";
+    } else {
+      return "Error";
+    }
+  }
+
+
+  Future<String> delete_User(String? id)async{
+    final response = await http.delete(Uri.parse("$URL_DET_USER$id"));
+    if(response.statusCode==200){
+      return "Success";
+    } else {
+      return "Error";
+    }
+  }
+
 
   Future<dynamic> edit_img(String? id, String? img) async {
     final response = await http.put(Uri.parse('${URL_EDIT_EDITIMG}$id/editimg'),
