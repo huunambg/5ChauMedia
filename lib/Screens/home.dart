@@ -10,7 +10,6 @@ import 'package:simple_barcode_scanner/enum.dart';
 import '/Models/datauser.dart';
 import '/Models/detailrollcall.dart';
 import '/Models/location.dart';
-import '/Models/notification.dart';
 import '/Models/settings.dart';
 import '/Models/wifi.dart';
 import '/Services/networks.dart';

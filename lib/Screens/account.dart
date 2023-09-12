@@ -105,19 +105,10 @@ class _AccountState extends State<Account> {
             ItemAccount_OK(
                 icon: Ionicons.help,
                 onpressed: () async {
-                  PermissionStatus status =
-                      await Permission.locationAlways.request();
-
-                  if (status.isGranted) {
                     NetworkInfo networkInfo = NetworkInfo();
                     String? Mac = await networkInfo.getWifiBSSID();
                     CherryToast.info(title: Text("${Mac}")).show(context);
-                  } else if (status.isDenied) {
-                    // Quyền vị trí bị từ chối, hiển thị thông báo hoặc hướng dẫn cho người dùng
-                  } else if (status.isPermanentlyDenied) {
-                    // Quyền vị trí bị từ chối vĩnh viễn, hiển thị thông báo hoặc hướng dẫn cho người dùng để họ cấp quyền vị trí trong cài đặt hệ thống
-                    openAppSettings();
-                  }
+                
                 },
                 titile: "Show MAC WIFI"),
             ItemAccount_OK(

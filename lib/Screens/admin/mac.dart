@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
 import 'package:personnel_5chaumedia/Screens/admin/listmac.dart';
 import 'package:personnel_5chaumedia/Services/networks.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,6 +23,32 @@ class _Set_Mac_WifiState extends State<Set_Mac_Wifi> {
   bool shouldCheckCan = true;
 
   bool get isStreaming => subscription != null;
+  Location location = Location();
+  bool? _serviceEnabled;
+  PermissionStatus? _permissionGranted;
+  LocationData? _locationData;
+
+  Future<void> _enableLocation() async {
+    // Check if location service is enabled
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled!) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled!) {
+        return;
+      }
+    }
+
+    // Check location permissions
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+    // Get location data (optional)
+    _locationData = await location.getLocation();
+  }
 
   Future<void> _startScan(BuildContext context) async {
     if (shouldCheckCan) {
@@ -62,6 +89,7 @@ class _Set_Mac_WifiState extends State<Set_Mac_Wifi> {
   }
 
   Future<void> _startListeningToScanResults(BuildContext context) async {
+    await _enableLocation();
     if (await _canGetScannedResults(context)) {
       subscription = WiFiScan.instance.onScannedResultsAvailable
           .listen((result) => setState(() => accessPoints = result));
