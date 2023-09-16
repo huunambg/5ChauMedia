@@ -77,7 +77,7 @@ class _AccountState extends State<Account> {
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
-                ),
+),
                 Text("Nhân viên chính thức")
               ],
             ),
@@ -105,10 +105,9 @@ class _AccountState extends State<Account> {
             ItemAccount_OK(
                 icon: Ionicons.help,
                 onpressed: () async {
-                    NetworkInfo networkInfo = NetworkInfo();
-                    String? Mac = await networkInfo.getWifiBSSID();
-                    CherryToast.info(title: Text("${Mac}")).show(context);
-                
+                  NetworkInfo networkInfo = NetworkInfo();
+                  String? Mac = await networkInfo.getWifiBSSID();
+                  CherryToast.info(title: Text("${Mac}")).show(context);
                 },
                 titile: "Show MAC WIFI"),
             ItemAccount_OK(
@@ -125,6 +124,7 @@ class _AccountState extends State<Account> {
                 onpressed: () async {
                   context.read<CountDown_Provider>().set_countdown(30);
                   bool check_click = false;
+                  bool check_dele = false;
                   await showDialog(
                     context: context,
                     builder: (context) {
@@ -144,12 +144,12 @@ class _AccountState extends State<Account> {
                                   width: 20,
                                   child: Text(
                                     "${context.watch<CountDown_Provider>().countdown()}",
-                                    style: TextStyle(color: Colors.red),
+style: TextStyle(color: Colors.red),
                                   ))
                               : TextButton(
                                   onPressed: () async {
                                     Navigator.pop(context);
-                                    check_click=true;
+                                    check_click = true;
                                   },
                                   child: Text("Xóa")),
                           TextButton(
@@ -162,23 +162,51 @@ class _AccountState extends State<Account> {
                     },
                   );
                   if (check_click == true) {
-                    if (await NetworkRequest().delete_User(
-                            context.read<DataUser_Provider>().id_personnel()) ==
-                        "Success") {
-                      CherryToast.success(
-                              title: Text("Xóa tài khoản thành công"))
-                          .show(context);
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Login_Screen_new()));
-                    } else {
-                      CherryToast.error(title: Text("Xóa tài khoản thất bại"))
-                          .show(context);
-                      logout(context);
+                    await showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text("Xóa tài khoản"),
+                          content: Text(
+                              "Khi bạn xoá tài khoản bạn sẽ không thể khôi phục dữ liệu cũng như sử dụng tài khoản hiện tại để đăng nhập vào ứng dụng bạn sẽ được đưa về màn hình đăng nhập.Bạn có chắc chắn muốn xoá."),
+                          actionsPadding: EdgeInsets.only(left: 30, right: 30),
+                          actionsAlignment: MainAxisAlignment.spaceBetween,
+                          actions: [
+                            TextButton(
+                                onPressed: () async {
+                                  Navigator.pop(context);
+                                  check_dele = true;
+                                },
+                                child: Text("Đồng ý")),
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text("Quay lại"))
+                          ],
+                        );
+                      },
+                    );
+
+                    if (check_dele == true) {
+                      if (await NetworkRequest().delete_User(context
+                              .read<DataUser_Provider>()
+                              .id_personnel()) ==
+                          "Success") {
+                        CherryToast.success(
+                                title: Text("Xóa tài khoản thành công"))
+                            .show(context);
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Login_Screen_new()));
+                      } else {
+                        CherryToast.error(title: Text("Xóa tài khoản thất bại"))
+                            .show(context);
+                      }
                     }
                   }
-                },
+},
                 titile: "Xóa tài khoản"),
             ItemAccount_OK(
                 icon: Ionicons.arrow_back_circle_outline,

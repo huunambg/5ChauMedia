@@ -235,7 +235,7 @@ class NetworkRequest {
   Future<dynamic> edit_img(String? id, String? img) async {
     final response = await http.put(Uri.parse('${URL_EDIT_EDITIMG}$id/editimg'),
         body: {"img": "$img"});
-    print(response.statusCode);
+    print("Status IMG ${response.statusCode}");
     if (jsonDecode(response.body)['status'] == 200) {
       return "Success";
     } else {
@@ -245,7 +245,7 @@ class NetworkRequest {
 
   Future<String> get_base64_img(String? id) async {
     final response = await http.get(Uri.parse('${URL_GET_BASE64_IMG}$id'));
-    print(response.statusCode);
+    print("Get IMG :${response.statusCode}");
     if (response.statusCode == 200) {
       return jsonDecode(response.body)['image'];
     } else {
@@ -260,7 +260,7 @@ class NetworkRequest {
       "phone":"$phone",
       "password":"$pass"
     });
-    print(response.statusCode);
+    print("Edit Profile :${response.statusCode}");
     if (response.statusCode == 200) {
       return "Success";
     } else {
