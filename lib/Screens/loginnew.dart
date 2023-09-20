@@ -225,6 +225,10 @@ class _Login_Screen_newState extends State<Login_Screen_new> {
                         height: size.height * 0.02,
                       ),
                       passwordTextField(size),
+                                            SizedBox(
+                        height: size.height * 0.02,
+                      ),
+                    
                       buildRemember_Password(size)
                     ],
                   ),
@@ -487,21 +491,21 @@ class _Login_Screen_newState extends State<Login_Screen_new> {
               color: const Color(0xFF0C0D34),
             ),
           ),
-          const Spacer(),
-          TextButton(
-              onPressed: () {
-                CherryToast.warning(title: Text("Đang update!")).show(context);
-                playBeepWarning();
-              },
-              child: Text(
-                'Quên mật khẩu?',
-                style: GoogleFonts.inter(
-                  fontSize: 13.0,
-                  color: const Color(0xFF21899C),
-                  fontWeight: FontWeight.w500,
-                ),
-                textAlign: TextAlign.right,
-              )),
+          // const Spacer(),
+          // TextButton(
+          //     onPressed: () {
+          //       CherryToast.warning(title: Text("Đang update!")).show(context);
+          //       playBeepWarning();
+          //     },
+          //     child: Text(
+          //       'Quên mật khẩu?',
+          //       style: GoogleFonts.inter(
+          //         fontSize: 13.0,
+          //         color: const Color(0xFF21899C),
+          //         fontWeight: FontWeight.w500,
+          //       ),
+          //       textAlign: TextAlign.right,
+          //     )),
         ],
       ),
     );
@@ -589,20 +593,21 @@ class _Login_Screen_newState extends State<Login_Screen_new> {
               SizedBox(
                 width: 5,
               ),
-              GestureDetector(
-                onTap: () {
-                  CherryToast.warning(title: Text("Đang update!"))
-                      .show(context);
-                  playBeepWarning();
-                },
-                child: Text(
-                  "Đang kí tài khoản",
+              // GestureDetector(
+              //   onTap: () {
+              //     CherryToast.warning(title: Text("Đang update!"))
+              //         .show(context);
+              //     playBeepWarning();
+              //   },
+              //  child: 
+                Text(
+                  "Liên hệ quản lý",
                   style: TextStyle(
                     color: Color(0xFFFF7248),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-              )
+            //  )
             ],
           )
         ],

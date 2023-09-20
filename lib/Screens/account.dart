@@ -110,15 +110,15 @@ class _AccountState extends State<Account> {
                   CherryToast.info(title: Text("${Mac}")).show(context);
                 },
                 titile: "Show MAC WIFI"),
-            ItemAccount_OK(
-                icon: Ionicons.settings_outline,
-                onpressed: () {
-                  check_color = !check_color;
-                  context
-                      .read<Setting_Provider>()
-                      .set_background_color(check_color);
-                },
-                titile: "Cài đặt"),
+            // ItemAccount_OK(
+            //     icon: Ionicons.settings_outline,
+            //     onpressed: () {
+            //       check_color = !check_color;
+            //       context
+            //           .read<Setting_Provider>()
+            //           .set_background_color(check_color);
+            //     },
+            //     titile: "Cài đặt"),
             ItemAccount_OK(
                 icon: Icons.clear_sharp,
                 onpressed: () async {
