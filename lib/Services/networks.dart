@@ -13,7 +13,6 @@ class NetworkRequest {
     return message;
   }
 
-
   Future<dynamic> Detaill_Rollcall_By_Month(String? id) async {
     final response = await http.get(
       Uri.parse('${URL_STATISTICAL_BY_MONTH}$id'),
@@ -35,7 +34,7 @@ class NetworkRequest {
     );
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body)['data2'];
-     // print("Length : $data");
+      // print("Length : $data");
       return data;
     } else
       return "Error";
@@ -69,8 +68,15 @@ class NetworkRequest {
 
   Future getLocation(String? id) async {
     final response = await http.get(Uri.parse('$URL_GETLOCATION/$id'));
-  //   print(jsonDecode(response.body)['personnel'][0]);
-    return jsonDecode(response.body)['personnel'];
+    print("GET LOCATION : ${response.statusCode}");
+    //   print(jsonDecode(response.body)['personnel'][0]);
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else if (response.statusCode == 202) {
+      return "Success";
+    } else {
+      return "Error";
+    }
   }
 
   Future getLocation_Admin(String? id) async {
@@ -78,17 +84,19 @@ class NetworkRequest {
     print(jsonDecode(response.body)['personnel']);
     return jsonDecode(response.body)['personnel'];
   }
-  Future update_Location_Admin(String? id,String? name,String ? lat,String? long ,String? meter) async {
-    final response = await http.put(Uri.parse('$URL_UPDATE_LOCATION_ADMIN/$id'),body: {
-      "name" :name,
-      "latitude":lat,
-      "longitude":long,
-      "meter":meter
-    });
+
+  Future update_Location_Admin(String? id, String? name, String? lat,
+      String? long, String? meter) async {
+    final response = await http.put(Uri.parse('$URL_UPDATE_LOCATION_ADMIN/$id'),
+        body: {
+          "name": name,
+          "latitude": lat,
+          "longitude": long,
+          "meter": meter
+        });
     print(jsonDecode(response.body)['status']);
     return jsonDecode(response.body)['status'];
   }
-
 
   Future<dynamic> get_Mac_admin(String? id) async {
     final response = await http.get(Uri.parse('$URL_GET_MAC_ADMIN$id'));
@@ -100,7 +108,6 @@ class NetworkRequest {
       return [];
     }
   }
-
 
   Future<dynamic> getdataRollcall_detail_day_one_day(
       String? month_year, String? id_per, String? day) async {
@@ -117,7 +124,7 @@ class NetworkRequest {
     final response = await http.get(Uri.parse('$URL_GET_NOTIFICATION/$id'));
 
     if (response.statusCode == 200) {
-   //   print(List.from(jsonDecode(response.body)['data'].reversed.toList()));
+      //   print(List.from(jsonDecode(response.body)['data'].reversed.toList()));
       return List.from(jsonDecode(response.body)['data'].reversed.toList());
     } else if (response.statusCode == 404) {
       return [];
@@ -138,10 +145,10 @@ class NetworkRequest {
     final response =
         await http.get(Uri.parse('${URL_GET_NOTIFICATION_CHECKED}$id')); //
     if (response.statusCode == 200) {
-   //   print(jsonDecode(response.body)['data']);
+      //   print(jsonDecode(response.body)['data']);
       return jsonDecode(response.body)['data'];
     } else {
-        // print("Error");
+      // print("Error");
       return [];
     }
   }
@@ -168,7 +175,6 @@ class NetworkRequest {
     }
   }
 
-
   Future<String> get_last_rollcall(String? id_personnel) async {
     final response =
         await http.get(Uri.parse('${URL_GET_LAST_ROLLCALL}$id_personnel'));
@@ -192,28 +198,31 @@ class NetworkRequest {
   }
 
   Future<dynamic> get_MAC_WIFI(String? id) async {
-    final response = await http.get(Uri.parse('${URL_GET_WIFI_MAC_ADDRESS}/$id'));
-
+    final response =
+        await http.get(Uri.parse('${URL_GET_WIFI_MAC_ADDRESS}/$id'));
+    print("GET WIFI : ${response.statusCode}");
     if (response.statusCode == 200) {
       return jsonDecode(response.body)['mac'];
+    } else if (response.statusCode == 202) {
+      return "Success";
     } else {
       return "Error";
     }
   }
-  Future<dynamic> add_MAC_WIFI(String? id,String ?wifi,String ? mac) async {
-    final response = await http.post(Uri.parse('${URL_ADD_MAC_ADMIN}$id'),body: {
-        "name":wifi,
-        "address":mac
-    });
+
+  Future<dynamic> add_MAC_WIFI(String? id, String? wifi, String? mac) async {
+    final response = await http.post(Uri.parse('${URL_ADD_MAC_ADMIN}$id'),
+        body: {"name": wifi, "address": mac});
     if (response.statusCode == 200) {
       return "Success";
     } else {
       return "Error";
     }
   }
+
   Future<dynamic> delete_MAC_WIFI(String? id) async {
-    final response = await http.delete(Uri.parse('${URL_DET_MAC_ADMIN}$id'),body: {
-    });
+    final response =
+        await http.delete(Uri.parse('${URL_DET_MAC_ADMIN}$id'), body: {});
     if (response.statusCode == 200) {
       return "Success";
     } else {
@@ -221,16 +230,14 @@ class NetworkRequest {
     }
   }
 
-
-  Future<String> delete_User(String? id)async{
+  Future<String> delete_User(String? id) async {
     final response = await http.delete(Uri.parse("$URL_DET_USER$id"));
-    if(response.statusCode==200){
+    if (response.statusCode == 200) {
       return "Success";
     } else {
       return "Error";
     }
   }
-
 
   Future<dynamic> edit_img(String? id, String? img) async {
     final response = await http.put(Uri.parse('${URL_EDIT_EDITIMG}$id/editimg'),
@@ -253,13 +260,15 @@ class NetworkRequest {
     }
   }
 
-  Future<String> edit_ProfileS(String? id,String? name,String? email,String? phone,String? pass) async {
-    final response = await http.put(Uri.parse('${URL_EDIT_PROFILE}$id/edit'),body: {
-      "name":"$name",
-      "email":"$email",
-      "phone":"$phone",
-      "password":"$pass"
-    });
+  Future<String> edit_ProfileS(String? id, String? name, String? email,
+      String? phone, String? pass) async {
+    final response = await http.put(Uri.parse('${URL_EDIT_PROFILE}$id/edit'),
+        body: {
+          "name": "$name",
+          "email": "$email",
+          "phone": "$phone",
+          "password": "$pass"
+        });
     print("Edit Profile :${response.statusCode}");
     if (response.statusCode == 200) {
       return "Success";
@@ -267,5 +276,4 @@ class NetworkRequest {
       return "Error";
     }
   }
-
 }

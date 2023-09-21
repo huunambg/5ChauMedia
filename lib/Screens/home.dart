@@ -27,7 +27,6 @@ class HomePageUser extends StatefulWidget {
   State<HomePageUser> createState() => _HomePageUserState();
 }
 
-
 class _HomePageUserState extends State<HomePageUser> {
   String? id_per;
   String? current_address, Text_QR;
@@ -44,6 +43,7 @@ class _HomePageUserState extends State<HomePageUser> {
   void dispose() {
     super.dispose();
   }
+
   NetworkRequest _networkRequest = new NetworkRequest();
   var data;
   int? working_day;
@@ -61,19 +61,17 @@ class _HomePageUserState extends State<HomePageUser> {
     get_data_current_day();
   }
 
-Future<void> checkLocationPermission() async {
+  Future<void> checkLocationPermission() async {
     bool serviceEnabled = await location.serviceEnabled();
     if (!serviceEnabled) {
       serviceEnabled = await location.requestService();
-      if (!serviceEnabled) {
-      }
+      if (!serviceEnabled) {}
     }
 
     PermissionStatus permissionGranted = await location.hasPermission();
     if (permissionGranted == PermissionStatus.denied) {
       permissionGranted = await location.requestPermission();
-      if (permissionGranted != PermissionStatus.granted) {
-      }
+      if (permissionGranted != PermissionStatus.granted) {}
     }
   }
 
@@ -90,9 +88,9 @@ Future<void> checkLocationPermission() async {
     context.read<Wifi_Provider>().setname(null);
     context.read<Location_Provider>().set__curren_address();
     await context.read<DetailRollCallUser_Provider>().set_Data_Day_OneDay();
-    context.read<DetailRollCallUser_Provider>().set_break_time_rollcall(context.read<DataUser_Provider>().id_personnel().toString());
+    context.read<DetailRollCallUser_Provider>().set_break_time_rollcall(
+        context.read<DataUser_Provider>().id_personnel().toString());
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +108,8 @@ Future<void> checkLocationPermission() async {
                     padding: const EdgeInsets.all(7.0),
                     child: Text.rich(TextSpan(children: [
                       TextSpan(
-                          text: "${context.watch<DataUser_Provider>().company_name()} ",
+                          text:
+                              "${context.watch<DataUser_Provider>().company_name()} ",
                           style: TextStyle(color: Colors.blue, fontSize: 16)),
                       TextSpan(
                           text:
@@ -133,27 +132,26 @@ Future<void> checkLocationPermission() async {
                             .show(context);
                         playBeepWarning();
                       } else {
-                          checking_dialog(h);
-                          await getcalculateDistance();
-                          await checkmac();
-                          if (check) {
-                            if (mounted != false) Navigator.pop(context);
-                            if (distance <= meter && mac_check == true) {
-                              _scanQRCode();
-                            } else if (mac_check == true && distance > meter) {
-                              error_distance_dialog(h);
-                            } else if (mac_check == false &&
-                                distance <= meter) {
-                              error_wifi_dialog(h);
-                            } else if (mac_check == false && distance > meter) {
-                              error_wifi_distance_dialog(h);
-                            }
+                        checking_dialog(h);
+                        await getcalculateDistance();
+                        await checkmac();
+                        if (check) {
+                          if (mounted != false) Navigator.pop(context);
+                          if (distance <= meter && mac_check == true) {
+                            _scanQRCode();
+                          } else if (mac_check == true && distance > meter) {
+                            error_distance_dialog(h);
+                          } else if (mac_check == false && distance <= meter) {
+                            error_wifi_dialog(h);
+                          } else if (mac_check == false && distance > meter) {
+                            error_wifi_distance_dialog(h);
                           }
-                          check = true;
+                        }
+                        check = true;
                       }
                     },
                   ),
-SizedBox(
+                  SizedBox(
                     height: 20,
                   ),
                   CustomDetailHome(
@@ -218,31 +216,35 @@ SizedBox(
   }
 
   Future<double> _calculateDistance() async {
-    var data3 = await _networkRequest.getLocation(context.read<DataUser_Provider>().id_personnel().toString());
-    print(data3);
-    meter = data3['meter'];
-    double fixedLatitude = double.parse(data3['latitude']); // kinh độ
-    double fixedLongitude = double.parse(data3['longitude']); // vĩ độ
-    Position currentPosition = await Geolocator.getCurrentPosition();
-     double distance = await Geolocator.distanceBetween(
-      currentPosition.latitude,
-      currentPosition.longitude,
-      fixedLatitude,
-      fixedLongitude,
-    );
+    var data3 = await _networkRequest.getLocation(
+        context.read<DataUser_Provider>().id_personnel().toString());
+    if (data3 == "Success") {
+      return 0;
+    } else {
+      print(data3);
+      meter = data3['personnel']['meter'];
+      double fixedLatitude = double.parse(data3['latitude']); // kinh độ
+      double fixedLongitude = double.parse(data3['longitude']); // vĩ độ
+      Position currentPosition = await Geolocator.getCurrentPosition();
+      double distance = await Geolocator.distanceBetween(
+        currentPosition.latitude,
+        currentPosition.longitude,
+        fixedLatitude,
+        fixedLongitude,
+      );
 
-    print("lat${currentPosition.latitude}  long ${currentPosition.longitude}");
-    return distance;
+      print(
+          "lat${currentPosition.latitude}  long ${currentPosition.longitude}");
+      return distance;
+    }
   }
 
   Future<void> getcalculateDistance() async {
     double _distance = await _calculateDistance();
     distance = _distance.round();
     print("Distance : $distance");
-    Text_QR = await _networkRequest.get_Text_QR_Rollcall(context.read<DataUser_Provider>().id_personnel().toString());
-    if (mounted) {
-      setState(() {});
-    }
+    Text_QR = await _networkRequest.get_Text_QR_Rollcall(
+        context.read<DataUser_Provider>().id_personnel().toString());
   }
 
   Future<void> checkmac() async {
@@ -259,14 +261,22 @@ SizedBox(
       }
     }
     String formattedMacAddress = formattedMacParts.join(":");
-  //  print("GET MAC WIFI : ${formattedMacAddress}");
-    List<dynamic> mac = await NetworkRequest().get_MAC_WIFI(context.read<DataUser_Provider>().id_personnel().toString());
-    mac.forEach((element) {
-      if (formattedMacAddress == element['address']) {
-        mac_check = true;
-      }
-      //print("${element['address']}");
-    });
+    //  print("GET MAC WIFI : ${formattedMacAddress}");
+    var datamac = await NetworkRequest().get_MAC_WIFI(
+        context.read<DataUser_Provider>().id_personnel().toString());
+    if (datamac == "Success") {
+      mac_check = true;
+    } else {
+      List<dynamic> mac = datamac;
+      mac.forEach((element) {
+        if (formattedMacAddress == element['address']) {
+          mac_check = true;
+        }
+        //print("${element['address']}");
+      });
+    }
+
+    print("MAC Check : $mac_check");
   }
 
   Future<void> _scanQRCode() async {
@@ -315,7 +325,7 @@ SizedBox(
         }
       } else if (time_delay > 0) {
         Navigator.pop(context);
-CherryToast.error(
+        CherryToast.error(
           title: Text(
             "Bạn phải chờ $time_delay phút để điểm danh",
           ),
@@ -424,7 +434,8 @@ CherryToast.error(
       },
     );
   }
-void error_wifi_distance_dialog(double h) {
+
+  void error_wifi_distance_dialog(double h) {
     showDialog(
       context: context,
       builder: (context) {
@@ -477,5 +488,4 @@ void error_wifi_distance_dialog(double h) {
   void playBeepWarning() async {
     await player.play(AssetSource("sounds/warning.mp3"));
   }
-
 }
