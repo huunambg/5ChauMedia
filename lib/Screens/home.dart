@@ -218,13 +218,14 @@ class _HomePageUserState extends State<HomePageUser> {
   Future<double> _calculateDistance() async {
     var data3 = await _networkRequest.getLocation(
         context.read<DataUser_Provider>().id_personnel().toString());
+      print(data3);
     if (data3 == "Success") {
       return 0;
     } else {
-      print(data3);
+     // print(data3);
       meter = data3['personnel']['meter'];
-      double fixedLatitude = double.parse(data3['latitude']); // kinh độ
-      double fixedLongitude = double.parse(data3['longitude']); // vĩ độ
+      double fixedLatitude = double.parse(data3['personnel']['latitude']); // kinh độ
+      double fixedLongitude = double.parse(data3['personnel']['longitude']); // vĩ độ
       Position currentPosition = await Geolocator.getCurrentPosition();
       double distance = await Geolocator.distanceBetween(
         currentPosition.latitude,
@@ -264,6 +265,7 @@ class _HomePageUserState extends State<HomePageUser> {
     //  print("GET MAC WIFI : ${formattedMacAddress}");
     var datamac = await NetworkRequest().get_MAC_WIFI(
         context.read<DataUser_Provider>().id_personnel().toString());
+        print("datamac: $datamac");
     if (datamac == "Success") {
       mac_check = true;
     } else {
