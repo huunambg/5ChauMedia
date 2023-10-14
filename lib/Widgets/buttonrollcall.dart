@@ -47,7 +47,7 @@ class CustomButtonRollcall extends StatelessWidget {
       //           ],
       //         ),
       //       )),
-        InkWell(borderRadius: BorderRadius.circular(500),
+        InkWell(borderRadius: BorderRadius.circular(1000),
             onTap: ontapqr,
             child: Container(
               decoration: BoxDecoration(boxShadow: [ BoxShadow(

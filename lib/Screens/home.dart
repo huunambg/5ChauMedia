@@ -261,8 +261,12 @@ class _HomePageUserState extends State<HomePageUser> {
         formattedMacParts.add(part);
       }
     }
+
+
+    
     String formattedMacAddress = formattedMacParts.join(":");
-    //  print("GET MAC WIFI : ${formattedMacAddress}");
+      print("GET MAC WIFI : ${get_MAC_WIFI}");
+      print("Fomart MAC WIFI : ${formattedMacAddress}");
     var datamac = await NetworkRequest().get_MAC_WIFI(
         context.read<DataUser_Provider>().id_personnel().toString());
         print("datamac: $datamac");
@@ -271,10 +275,10 @@ class _HomePageUserState extends State<HomePageUser> {
     } else {
       List<dynamic> mac = datamac;
       mac.forEach((element) {
-        if (formattedMacAddress == element['address']) {
+        if (formattedMacAddress == element['address'] || get_MAC_WIFI==element['address']) {
           mac_check = true;
         }
-        //print("${element['address']}");
+        print("${element['address']}");
       });
     }
 

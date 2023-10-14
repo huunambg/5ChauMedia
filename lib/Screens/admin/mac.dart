@@ -166,6 +166,19 @@ class _Set_Mac_WifiState extends State<Set_Mac_Wifi> {
     await _enableLocation();
     mac = await networkInfo.getWifiBSSID();
     name = await networkInfo.getWifiName();
+
+
+    List<String> macParts = mac!.split(":");
+    List<String> formattedMacParts = [];
+    for (String part in macParts) {
+      if (part.length == 1) {
+        formattedMacParts.add("0$part");
+      } else {
+        formattedMacParts.add(part);
+      }
+    }
+
+    String formattedMacAddress = formattedMacParts.join(":");
     String xau = name!;
     if (xau.startsWith('"')) {
       xau = xau.substring(1);
@@ -176,7 +189,7 @@ class _Set_Mac_WifiState extends State<Set_Mac_Wifi> {
     //print(xau);
     setState(() {
       namecontroller.text = xau;
-      maccontroller.text = mac!;
+      maccontroller.text = formattedMacAddress;
     });
   }
 

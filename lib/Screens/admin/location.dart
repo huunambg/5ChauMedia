@@ -43,15 +43,30 @@ class Set_LocationState extends State<Set_Location> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? id_company = await prefs.getString('company_id');
     var data = await NetworkRequest().getLocation_Admin(id_company);
-    latitude = double.parse(data['latitude']);
-    longtitude = double.parse(data['longitude']);
+
+
+    try{
     id = data['id'].toString();
     name = data['name'].toString();
     meter = data['meter'].toString();
+    latitude = double.parse(data['latitude']);
+    longtitude = double.parse(data['longitude']);
+
+
+    if(latitude==0 || longtitude==0){
+
+         Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+      latitude=position.latitude;
+      longtitude=position.longitude;
+    }
     _kGooglePlex = CameraPosition(
       target: LatLng(latitude, longtitude),
       zoom: 19.4746,
     );
+
+
     _markers.add(
       Marker(
         markerId: MarkerId("${latitude} + ${longtitude}"),
@@ -66,6 +81,38 @@ class Set_LocationState extends State<Set_Location> {
     lngcontroller.text = longtitude.toString();
     metercontroller.text=meter.toString();
     setState(() {});
+    }
+    catch(e){
+      print("Check Bug :$e");
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+      latitude=position.latitude;
+      longtitude=position.longitude;
+    _kGooglePlex = CameraPosition(
+      target: LatLng(latitude, longtitude),
+      zoom: 19.4746,
+    );
+
+
+    _markers.add(
+      Marker(
+        markerId: MarkerId("${latitude} + ${longtitude}"),
+        position: LatLng(latitude, longtitude),
+        infoWindow: InfoWindow(
+          title: 'Vị trí chọn',
+          snippet: 'Kinh độ: $latitude, Vĩ độ: $longtitude',
+        ),
+      ),
+    );
+    meter="100";
+    latcontroller.text = latitude.toString();
+    lngcontroller.text = longtitude.toString();
+    metercontroller.text=meter.toString();
+    setState(() {});
+    }
+
+    
   }
 
   @override
@@ -210,8 +257,8 @@ class Set_LocationState extends State<Set_Location> {
                           );
                         },
                       );
-          
                       if (check_click == true) {
+                        print("hihih");
                         status = await NetworkRequest().update_Location_Admin(id,
                             name, latcontroller.text, lngcontroller.text, metercontroller.text);
           

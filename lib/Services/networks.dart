@@ -94,7 +94,7 @@ class NetworkRequest {
           "longitude": long,
           "meter": meter
         });
-    print(jsonDecode(response.body)['status']);
+    print("Update Location :${response.statusCode}");
     return jsonDecode(response.body)['status'];
   }
 
