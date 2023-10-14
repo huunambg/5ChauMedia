@@ -166,7 +166,7 @@ class _HomePageUserState extends State<HomePageUser> {
                   CustomDetailHome(
                       title: "Tổng số ngày đi làm:",
                       content:
-                          total_working_day != null && total_working_day != 0
+                          working_day != null && working_day != 0
                               ? "${total_working_day}"
                               : "Chưa đi làm",
                       icon: Icons.check_box_outlined),
@@ -199,6 +199,7 @@ class _HomePageUserState extends State<HomePageUser> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     id_per = prefs.getString('id_per');
     data = await _networkRequest.Statistical_By_Month(id_per);
+    print(data);
     if (data != null && data != "Error") {
       working_day = data['working_day'];
       total_working_day = data['total_working_day'];
@@ -261,8 +262,6 @@ class _HomePageUserState extends State<HomePageUser> {
         formattedMacParts.add(part);
       }
     }
-
-
     
     String formattedMacAddress = formattedMacParts.join(":");
       print("GET MAC WIFI : ${get_MAC_WIFI}");

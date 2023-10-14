@@ -7,10 +7,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:network_info_plus/network_info_plus.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:personnel_5chaumedia/Models/countdown.dart';
 import 'package:personnel_5chaumedia/Models/datauser.dart';
-import 'package:personnel_5chaumedia/Screens/editpassword.dart';
 import 'package:personnel_5chaumedia/Screens/editprofile.dart';
 import 'package:personnel_5chaumedia/Screens/loginnew.dart';
 import 'package:personnel_5chaumedia/Services/networks.dart';
@@ -77,7 +75,7 @@ class _AccountState extends State<Account> {
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
-),
+                ),
                 Text("Nhân viên chính thức")
               ],
             ),
@@ -93,32 +91,16 @@ class _AccountState extends State<Account> {
                           builder: (context) => Edit_Profile_Screen()));
                 },
                 titile: "Chỉnh sửa thông tin"),
-            ItemAccount_OK(
-                icon: Ionicons.lock_closed_outline,
-                onpressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Edit_Password_Screen()));
-                },
-                titile: "Đổi mật khẩu"),
+
             ItemAccount_OK(
                 icon: Ionicons.help,
                 onpressed: () async {
                   NetworkInfo networkInfo = NetworkInfo();
+                  String ? Name =await networkInfo.getWifiName();
                   String? Mac = await networkInfo.getWifiBSSID();
-                  CherryToast.info(title: Text("${Mac}")).show(context);
+                  CherryToast.info(title: Text("Wifi:$Name\nMAC:${Mac}")).show(context);
                 },
-                titile: "Show MAC WIFI"),
-            // ItemAccount_OK(
-            //     icon: Ionicons.settings_outline,
-            //     onpressed: () {
-            //       check_color = !check_color;
-            //       context
-            //           .read<Setting_Provider>()
-            //           .set_background_color(check_color);
-            //     },
-            //     titile: "Cài đặt"),
+                titile: "Xem thông tin wifi WIFI"),
             ItemAccount_OK(
                 icon: Icons.clear_sharp,
                 onpressed: () async {
@@ -144,7 +126,7 @@ class _AccountState extends State<Account> {
                                   width: 20,
                                   child: Text(
                                     "${context.watch<CountDown_Provider>().countdown()}",
-style: TextStyle(color: Colors.red),
+                                    style: TextStyle(color: Colors.red),
                                   ))
                               : TextButton(
                                   onPressed: () async {
@@ -206,7 +188,7 @@ style: TextStyle(color: Colors.red),
                       }
                     }
                   }
-},
+                },
                 titile: "Xóa tài khoản"),
             ItemAccount_OK(
                 icon: Ionicons.arrow_back_circle_outline,

@@ -32,8 +32,8 @@ void main() async {
       ChangeNotifierProvider(create: (_) => DataUser_Provider()),
       ChangeNotifierProvider(create: (_) => Data_Provider()),
       ChangeNotifierProvider(create: (_) => Location_Provider()),
-      ChangeNotifierProvider(create: (_) =>CountDown_Provider()),
-       ChangeNotifierProvider(create: (_) =>Permission_Provider()),
+      ChangeNotifierProvider(create: (_) => CountDown_Provider()),
+      ChangeNotifierProvider(create: (_) => Permission_Provider()),
     ], child: MyApp()));
   });
 }
@@ -50,20 +50,17 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       home: AnimatedSplashScreen(
-        backgroundColor:  Color.fromRGBO(206, 237, 243, 1),
-        splashIconSize: 350,
-        splash: Center(
-          child: Container(
-            
-            padding: EdgeInsets.only(left: 16,right: 16),
-            child: Column(
-              children: [
-               Image.asset("assets/images/5chau_splash.png")
-              ],
-            ),
+        splashIconSize: 300,
+        backgroundColor: Color.fromRGBO(206, 237, 243, 1),
+        splash: Container(
+          height: MediaQuery.of(context).size.height * 0.2,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [Image.asset("assets/icons/logook.png", height: MediaQuery.of(context).size.height * 0.25, width: MediaQuery.of(context).size.height * 0.25,), richText(25)],
           ),
         ),
-        nextScreen:Loading(),
+        nextScreen: Loading(),
         duration: 3000,
         splashTransition: SplashTransition.scaleTransition,
       ),
@@ -74,23 +71,23 @@ class MyApp extends StatelessWidget {
     );
   }
 
-   Widget richText(double fontSize) {
+  Widget richText(double fontSize) {
     return Text.rich(
       TextSpan(
-        style: GoogleFonts.inter(
+        style: GoogleFonts.roboto(
           fontSize: fontSize,
           color: const Color(0xFF21899C),
           letterSpacing: 2.000000061035156,
         ),
         children: const [
           TextSpan(
-            text: '5 Châu',
+            text: 'Chuyển đổi',
             style: TextStyle(
               fontWeight: FontWeight.w800,
             ),
           ),
           TextSpan(
-            text: ' Media',
+            text: ' số',
             style: TextStyle(
               color: Color(0xFFFE9879),
               fontWeight: FontWeight.w800,

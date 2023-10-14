@@ -24,6 +24,8 @@ class _Edit_Profile_ScreenState extends State<Edit_Profile_Screen> {
   final email_controller = TextEditingController();
   String imagepath = "";
   String base64String = "";
+  final password_controller = TextEditingController();
+
   final ImagePicker imagePicker = ImagePicker();
   @override
   void initState() {
@@ -120,6 +122,16 @@ class _Edit_Profile_ScreenState extends State<Edit_Profile_Screen> {
                 controller: phone_controller,
                 titile: "Số điện thoại",
               ),
+              SizedBox(height: 10),
+              TextField(
+                controller: password_controller,
+                decoration: InputDecoration(
+                    labelText: "Mật khẩu (để trống là mật khẩu cũ)",
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                      15,
+                    ))),
+              ),
               SizedBox(height: 20),
               Container(
                 width: 200,
@@ -196,21 +208,28 @@ class _Edit_Profile_ScreenState extends State<Edit_Profile_Screen> {
         int.tryParse(phone_controller.text) != null &&
         email_controller.text != "" &&
         name_controller.text != "") {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        String? pass = await prefs.getString('password');
-      String? massage = await NetworkRequest()
-          .edit_ProfileS(context.read<DataUser_Provider>().id_per(),name_controller.text,email_controller.text,phone_controller.text,pass);
-              Navigator.pop(context);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? pass;
+      if (password_controller.text == "") {
+        pass = await prefs.getString('password');
+      } else {
+        pass = password_controller.text;
+      }
+      String? massage = await NetworkRequest().edit_ProfileS(
+          context.read<DataUser_Provider>().id_per(),
+          name_controller.text,
+          email_controller.text,
+          phone_controller.text,
+          pass);
+      Navigator.pop(context);
       if (massage != "Error") {
         CherryToast.success(title: Text("Cập nhật dữ liệu thành công"))
             .show(context);
+        await prefs.setString('user_name', name_controller.text);
+        await prefs.setString('email', email_controller.text);
+        await prefs.setString('phone', phone_controller.text);
 
-        await  prefs.setString('user_name',name_controller.text);
-         await prefs.setString('email',email_controller.text);
-         await prefs.setString('phone',phone_controller.text);
-        
         context.read<DataUser_Provider>().set_id_name_personnel();
-            
       } else {
         CherryToast.error(title: Text("Cập nhật dữ liệu thất bại"))
             .show(context);
