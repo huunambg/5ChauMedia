@@ -1,33 +1,35 @@
 import 'dart:convert';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cherry_toast/cherry_toast.dart';
-import 'package:http/http.dart' as http;
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:personnel_5chaumedia/Models/permission.dart';
-import 'package:personnel_5chaumedia/Screens/admin/homeadmin.dart';
-import 'package:personnel_5chaumedia/Screens/check_id_company.dart';
-import 'package:personnel_5chaumedia/Screens/root.dart';
+import 'package:personnel_5chaumedia/Screens/loginnew.dart';
 import 'package:personnel_5chaumedia/Services/networks.dart';
 import 'package:personnel_5chaumedia/Widgets/nextscreen.dart';
-import 'package:personnel_5chaumedia/constants.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class Login_Screen_new extends StatefulWidget {
-  const Login_Screen_new({Key? key}) : super(key: key);
+class Register_Screen extends StatefulWidget {
+  final data;
+  const Register_Screen({Key? key, required this.data}) : super(key: key);
   @override
-  State<Login_Screen_new> createState() => _Login_Screen_newState();
+  State<Register_Screen> createState() => _Register_ScreenState();
 }
 
-class _Login_Screen_newState extends State<Login_Screen_new> {
+class _Register_ScreenState extends State<Register_Screen> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  TextEditingController _name_controller = TextEditingController();
+  TextEditingController _phone_Controller = TextEditingController();
+  TextEditingController _department_Controller = TextEditingController();
+
   bool _isObscure = true;
-  bool _rememberMe = false;
-  NetworkRequest x = new NetworkRequest();
-  AudioPlayer player = AudioPlayer();
+
   bool _isValidEmail = true;
+
+  final List<String> items = [];
+  String? selectedValue;
+  String? selectedValue_id;
+
   void _validateEmail(String input) {
     final emailRegExp = RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
     setState(() {
@@ -35,155 +37,27 @@ class _Login_Screen_newState extends State<Login_Screen_new> {
     });
   }
 
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
+  void load_data() {
+    List<dynamic> res = widget.data;
+
+    res.forEach((element) {
+      items.add("${element['name']}");
+    });
+
+    setState(() {});
   }
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-    _loadSavedCredentials();
-  }
-
-  Future<void> _login(double h) async {
-    String url = '$URL_LOGIN';
-
-    Map<String, String> headers = {
-      'Content-Type': 'application/json',
-    };
-
-    Map<String, dynamic> data = {
-      'email': _emailController.text,
-      'password': _passwordController.text,
-    };
-    try {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          content: Container(
-            height: h * 0.3,
-            child: Center(
-              child: CircularProgressIndicator(),
-            ),
-          ),
-        ),
-      );
-      var response = await http.post(
-        Uri.parse(url),
-        headers: headers,
-        body: jsonEncode(data),
-      );
-
-      if (response.statusCode == 200) {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        // Đăng nhập thành công
-        if (_rememberMe) {
-          await prefs.setString('email', _emailController.text);
-          await prefs.setString('password', _passwordController.text);
-          await prefs.setBool('rememberMe', true);
-          await prefs.setBool("is_logout", false);
-        } else {
-          await prefs.remove('email');
-          await prefs.remove('password');
-          await prefs.remove('rememberMe');
-        }
-
-        var data = jsonDecode(response.body)['user'];
-
-        print(jsonDecode(response.body));
-
-        if (data['role'] == 'personnel') {
-          var data2 = jsonDecode(response.body)['id_per'][0];
-          var data3 = jsonDecode(response.body)['pid'];
-          String id_per = data2['id'].toString();
-          String user_name = data['name'].toString();
-          String email = data['email'];
-          String id_personnel = data3[0]['id'];
-          String phone =
-              jsonDecode(response.body)['phone'][0]['phone'].toString();
-          String id_company = data['company_id'];
-          String company_name = jsonDecode(response.body)['company'];
-          String department_name = jsonDecode(response.body)['department'];
-          // print(
-          //     "Phone $phone id_personnel: $id_personnel email $email ,user_name :$user_name ,id_per: $id_per  ,company_id :$id_company");
-          await prefs.setString('id_per', id_per);
-          await prefs.setString('user_name', user_name);
-          await prefs.setString('email', email);
-          await prefs.setString('id_personnel', id_personnel);
-          await prefs.setString('phone', phone);
-          await prefs.setString('company_id', id_company);
-          await prefs.setString('company_name', company_name);
-          await prefs.setString('department', department_name);
-          // Chuyển đến màn hình chính hoặc màn hình tiếp theo
-
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => RootUser(
-                      id_company: '$id_company',
-                    )),
-          );
-        } else {
-
-          var data_permisson = jsonDecode(response.body)['permission'];
-          context.read<Permission_Provider>().set_list_permission(data_permisson);
-
-
-          String id_company = data['company_id'];
-            await prefs.setString('company_id', id_company);
-                    Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => HomeAdmin()),
-          );
-        }
-      } else {
-        Navigator.pop(context);
-        // Đăng nhập thất bại
-        var responseData = jsonDecode(response.body);
-        String errorMessage = responseData['message'];
-
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Đăng nhập thất bại!'),
-            content: Text(errorMessage),
-            actions: [
-              TextButton(
-                child: Text('OK'),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-        );
-      }
-    } catch (error) {
-      // Xảy ra lỗi kết nối
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Lỗi'),
-          content: Text('Đã xảy ra lỗi kết nối.'),
-          actions: [
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
-      );
-    }
+    load_data();
   }
 
   @override
   Widget build(BuildContext context) {
+    double h = MediaQuery.of(context).size.height;
+    double w = MediaQuery.of(context).size.width;
     final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.white,
@@ -203,8 +77,8 @@ class _Login_Screen_newState extends State<Login_Screen_new> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Expanded(
-                  flex: 5,
+                Container(
+                  height: h * 0.25,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -217,48 +91,76 @@ class _Login_Screen_newState extends State<Login_Screen_new> {
                 ),
 
                 //email, password textField and recovery password here
-                Expanded(
-                  flex: 4,
+                Container(
+                  height: h * 0.5,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      name_textfield(size),
+                      SizedBox(
+                        height: size.height * 0.02,
+                      ),
+                      _department_selected(w, size),
+                      SizedBox(
+                        height: size.height * 0.02,
+                      ),
+                      phone_TextField(size),
+                      SizedBox(
+                        height: size.height * 0.02,
+                      ),
                       emailTextField(size),
                       SizedBox(
                         height: size.height * 0.02,
                       ),
                       passwordTextField(size),
-                                            SizedBox(
+                      SizedBox(
                         height: size.height * 0.02,
                       ),
-                    
-                      buildRemember_Password(size)
                     ],
                   ),
                 ),
 
                 //sign in button here
-                Expanded(
-                    flex: 1,
-                    child: signInButton(
-                      size,
-                      () {
-                          if(_emailController.text.length!=0 && _passwordController.text.length!=0){
-                            
-                            _login(MediaQuery.of(context).size.height);
-                          }
-                          else{
-                            CherryToast.warning(title: Text("Vui lòng kiểm tra dữ liệu nhập")).show(context);
-                          }
+                Container(
+                    height: h * 0.07,
+                    child: signup_Button(size, () async {
+                      if (selectedValue == null ||
+                          _emailController.text == "" ||
+                          _phone_Controller.text.length == 0 ||
+                          _passwordController.text.length == 0 ||
+                          _name_controller.text.length == 0|| _phone_Controller.text.length < 10 || _phone_Controller.text.length > 12) {
+                        CherryToast.warning(
+                                title: Text("Vui lòng kiểm tra dữ liệu"))
+                            .show(context);
+                      } else {
+                        String message = await NetworkRequest()
+                            .register_personnel(
+                                _name_controller.text,
+                                _phone_Controller.text,
+                                _emailController.text,
+                                _passwordController.text,
+                                selectedValue_id);
 
-                      },
-                    )),
+                        if (message == "Success") {
+                          CherryToast.success(
+                                  title: Text(
+                                      "Đang ký thành công vui lòng chờ quản lý duyệt"))
+                              .show(context);
+                           setState(() {
+                               _passwordController.text="";
+                           });
+                        } else {
+                          CherryToast.warning(title: Text("Đang kí thất bại tài khoản đã tồn tại"))
+                              .show(context);
+                        }
+                      }
+                    })),
 
                 Expanded(
                   flex: 3,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      buildNoAccountText(),
                       SizedBox(
                         height: size.height * 0.03,
                       ),
@@ -305,6 +207,150 @@ class _Login_Screen_newState extends State<Login_Screen_new> {
         ],
       ),
     );
+  }
+
+  Widget _department_selected(double w, Size size) {
+    return Container(
+      width: double.infinity,
+      height: size.height / 13,
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton2<String>(
+          isExpanded: true,
+          hint: const Row(
+            children: [
+              Icon(
+                Icons.list_alt_outlined,
+                size: 16,
+                color: Color.fromARGB(255, 117, 117, 117),
+              ),
+              SizedBox(
+                width: 7,
+              ),
+              Expanded(
+                child: Text(
+                  'Chọn phòng ban',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+          items: items
+              .map((String item) => DropdownMenuItem<String>(
+                    value: item,
+                    child: Text(
+                      item,
+                      style: const TextStyle(
+                        fontSize: 14,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ))
+              .toList(),
+          value: selectedValue,
+          onChanged: (String? value) {
+            setState(() {
+              List<dynamic> res = widget.data;
+              res.forEach((element) {
+                if (value == element['name']) {
+                  selectedValue_id = element['id'];
+                }
+              });
+              selectedValue = value;
+            });
+          },
+          buttonStyleData: ButtonStyleData(
+            height: 50,
+            width: 160,
+            padding: const EdgeInsets.only(left: 14, right: 14),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: selectedValue == null
+                  ? null
+                  : Border.all(color: Color(0xFF21899C)),
+              color: const Color.fromRGBO(248, 247, 251, 1),
+            ),
+            elevation: 2,
+          ),
+          iconStyleData: const IconStyleData(
+            icon: Icon(
+              Icons.arrow_forward_ios_outlined,
+            ),
+            iconSize: 14,
+          ),
+          dropdownStyleData: DropdownStyleData(
+            maxHeight: 200,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
+              color: const Color.fromRGBO(248, 247, 251, 1),
+            ),
+            scrollbarTheme: ScrollbarThemeData(
+              radius: const Radius.circular(20),
+              thickness: MaterialStateProperty.all<double>(6),
+              thumbVisibility: MaterialStateProperty.all<bool>(true),
+            ),
+          ),
+          menuItemStyleData: const MenuItemStyleData(
+            height: 40,
+            padding: EdgeInsets.only(left: 14, right: 14),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget phone_TextField(Size size) {
+    return SizedBox(
+        height: size.height / 13,
+        child: TextField(
+            controller: _phone_Controller,
+            style: GoogleFonts.inter(
+              fontSize: 16.0,
+              color: const Color(0xFF151624),
+            ),
+            maxLines: 1,
+            keyboardType: TextInputType.number,
+            cursorColor: const Color(0xFF21899C),
+            decoration: InputDecoration(
+              prefixIcon: Icon(
+                Icons.phone,
+                color: _phone_Controller.text.isEmpty
+                    ? const Color(0xFF151624).withOpacity(0.5)
+                    : const Color.fromRGBO(44, 185, 176, 1),
+                size: 16,
+              ),
+              //     errorText: _isValidEmail ? null : 'Enter a valid email',
+              hintText: 'Nhập số điện thoại',
+              hintStyle: GoogleFonts.inter(
+                fontSize: 16.0,
+                color: const Color(0xFFABB3BB),
+                height: 1.0,
+              ),
+              filled: true,
+              fillColor: const Color.fromRGBO(248, 247, 251, 1),
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(
+                      color: _phone_Controller.text.isEmpty
+                          ? Colors.transparent
+                          : const Color(0xFF21899C))),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(
+                      color: _phone_Controller.text.isEmpty
+                          ? Colors.transparent
+                          : const Color(0xFF21899C))),
+              border: InputBorder.none,
+            ),
+            onChanged: (value) {
+              setState(() {
+                _phone_Controller.text;
+              });
+            }));
   }
 
   Widget emailTextField(Size size) {
@@ -384,7 +430,6 @@ class _Login_Screen_newState extends State<Login_Screen_new> {
           color: const Color(0xFF151624),
         ),
         maxLines: 1,
-        keyboardType: TextInputType.emailAddress,
         cursorColor: const Color(0xFF21899C),
         decoration: InputDecoration(
           prefixIcon: Icon(
@@ -464,65 +509,57 @@ class _Login_Screen_newState extends State<Login_Screen_new> {
     );
   }
 
-  Widget buildRemember_Password(Size size) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0),
-      child: Row(
-        children: [
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                _rememberMe = !_rememberMe;
-              });
-            },
-            child: Container(
-              alignment: Alignment.center,
-              width: 20.0,
-              height: 20.0,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5.0),
-                color: const Color(0xFF21899C),
-              ),
-              child: _rememberMe == true
-                  ? Icon(
-                      Icons.check,
-                      size: 13,
-                      color: Colors.white,
-                    )
-                  : null,
+  Widget name_textfield(Size size) {
+    return SizedBox(
+        height: size.height / 13,
+        child: TextField(
+          controller: _name_controller,
+          style: GoogleFonts.inter(
+            fontSize: 16.0,
+            color: const Color(0xFF151624),
+          ),
+          maxLines: 1,
+          cursorColor: const Color(0xFF21899C),
+          decoration: InputDecoration(
+            prefixIcon: Icon(
+              Icons.person,
+              color: _name_controller.text.isEmpty
+                  ? const Color(0xFF151624).withOpacity(0.5)
+                  : const Color.fromRGBO(44, 185, 176, 1),
+              size: 16,
             ),
-          ),
-          const SizedBox(
-            width: 8,
-          ),
-          Text(
-            'Lưu mật khấu',
-            style: GoogleFonts.inter(
-              fontSize: 15.0,
-              color: const Color(0xFF0C0D34),
+            //     errorText: _isValidEmail ? null : 'Enter a valid email',
+            hintText: 'Nhập tên',
+            hintStyle: GoogleFonts.inter(
+              fontSize: 16.0,
+              color: const Color(0xFFABB3BB),
+              height: 1.0,
             ),
+            filled: true,
+            fillColor: const Color.fromRGBO(248, 247, 251, 1),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(
+                    color: _name_controller.text.isEmpty
+                        ? Colors.transparent
+                        : const Color(0xFF21899C))),
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(
+                    color: _name_controller.text.isEmpty
+                        ? Colors.transparent
+                        : const Color(0xFF21899C))),
+            border: InputBorder.none,
           ),
-          // const Spacer(),
-          // TextButton(
-          //     onPressed: () {
-          //       CherryToast.warning(title: Text("Đang update!")).show(context);
-          //       playBeepWarning();
-          //     },
-          //     child: Text(
-          //       'Quên mật khẩu?',
-          //       style: GoogleFonts.inter(
-          //         fontSize: 13.0,
-          //         color: const Color(0xFF21899C),
-          //         fontWeight: FontWeight.w500,
-          //       ),
-          //       textAlign: TextAlign.right,
-          //     )),
-        ],
-      ),
-    );
+          onChanged: (value) {
+            setState(() {
+              _name_controller.text;
+            });
+          },
+        ));
   }
 
-  Widget signInButton(Size size, GestureTapCallback ontap) {
+  Widget signup_Button(Size size, GestureTapCallback ontap) {
     return GestureDetector(
       onTap: ontap,
       child: Container(
@@ -540,7 +577,7 @@ class _Login_Screen_newState extends State<Login_Screen_new> {
           ],
         ),
         child: Text(
-          'Đăng Nhập',
+          'Đăng ký',
           style: GoogleFonts.inter(
             fontSize: 16.0,
             color: Colors.white,
@@ -553,39 +590,10 @@ class _Login_Screen_newState extends State<Login_Screen_new> {
     );
   }
 
-  Widget buildNoAccountText() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        const Expanded(
-            flex: 2,
-            child: Divider(
-              color: Color.fromARGB(0, 242, 242, 243),
-            )),
-        Expanded(
-          flex: 3,
-          child: Text(
-            '',
-          ),
-        ),
-        const Expanded(
-            flex: 2,
-            child: Divider(
-              color: Color.fromARGB(0, 242, 242, 243),
-            )),
-      ],
-    );
-  }
-
   Widget buildFooter(Size size) {
     return Center(
       child: Column(
         children: <Widget>[
-          //social icon here
-          SizedBox(
-            height: 44.0,
-          ),
           SizedBox(
             height: size.height * 0.01,
           ),
@@ -594,7 +602,7 @@ class _Login_Screen_newState extends State<Login_Screen_new> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Bạn chưa có tài khoản?',
+                'Bạn đã có tài khoản?',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(
                   color: const Color(0xFF969AA8),
@@ -604,47 +612,23 @@ class _Login_Screen_newState extends State<Login_Screen_new> {
               SizedBox(
                 width: 5,
               ),
-                GestureDetector(
-                  onTap: () {
-                    Next_Screeen().pushReplacement(context, Check_ID_Company_Register());
-                  },
-                  child: Text(
-                    "Đăng ký",
-                    style: TextStyle(
-                      color: Color(0xFFFF7248),
-                      fontWeight: FontWeight.w500,
-                    ),
+              GestureDetector(
+                onTap: () {
+                  Next_Screeen().pushReplacement(context, Login_Screen_new());
+                },
+                child: Text(
+                  "Đăng nhập",
+                  style: TextStyle(
+                    color: Color(0xFFFF7248),
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-            //  )
+              ),
+              //  )
             ],
           )
         ],
       ),
     );
-  }
-
-  Future<void> _loadSavedCredentials() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? savedEmail = prefs.getString('email');
-    String? savedPassword = prefs.getString('password');
-    bool? savedRememberMe = prefs.getBool('rememberMe');
-    String? name = prefs.getString('user_name');
-    print(name);
-
-    if (savedEmail != null &&
-        savedPassword != null &&
-        savedRememberMe != null &&
-        savedRememberMe) {
-      setState(() {
-        _emailController.text = savedEmail;
-        _passwordController.text = savedPassword;
-        _rememberMe = true;
-      });
-    }
-  }
-
-  void playBeepWarning() async {
-    await player.play(AssetSource("sounds/warning.mp3"));
   }
 }

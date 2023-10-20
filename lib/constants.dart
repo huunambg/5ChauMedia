@@ -30,3 +30,5 @@ const String URL_GET_MAC_ADMIN="https://$SERVER_NAME/get-mac-address2/";
 const String URL_ADD_MAC_ADMIN="https://$SERVER_NAME/create-mac-address2/";
 const String URL_DET_MAC_ADMIN="https://$SERVER_NAME/delete-mac-address2/";
 const String URL_DET_USER="https://$SERVER_NAME/delete-user/";
+const String URL_CHECK_ID_COMPANY="https://$SERVER_NAME/check-company/";
+const String URL_REGISTER_PERSONNEL="https://$SERVER_NAME/register-personnel/";

@@ -2,7 +2,8 @@ import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:personnel_5chaumedia/Models/datauser.dart';
 import 'package:personnel_5chaumedia/Models/permission.dart';
-import 'package:personnel_5chaumedia/Screens/admin/location.dart';
+import 'package:personnel_5chaumedia/Screens/admin/list_location.dart';
+import 'package:personnel_5chaumedia/Screens/admin/location_detail.dart';
 import 'package:personnel_5chaumedia/Screens/admin/mac.dart';
 import 'package:personnel_5chaumedia/Screens/loginnew.dart';
 import 'package:personnel_5chaumedia/constants.dart';
@@ -68,7 +69,7 @@ class _HomeAdminState extends State<HomeAdmin> {
 
                 if (check_permiison == true) {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Set_Location()));
+                      MaterialPageRoute(builder: (context) => List_Location()));
                 } else {
                   CherryToast.warning(
                           title: Text(

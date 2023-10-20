@@ -7,7 +7,8 @@ import 'package:personnel_5chaumedia/Services/networks.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Set_Location extends StatefulWidget {
-  const Set_Location({super.key});
+  final data ;
+  const Set_Location({super.key,this.data});
 
   @override
   State<Set_Location> createState() => Set_LocationState();
@@ -40,21 +41,14 @@ class Set_LocationState extends State<Set_Location> {
   }
 
   void load() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? id_company = await prefs.getString('company_id');
-    var data = await NetworkRequest().getLocation_Admin(id_company);
-
-
+  var data = await widget.data;
     try{
     id = data['id'].toString();
     name = data['name'].toString();
     meter = data['meter'].toString();
     latitude = double.parse(data['latitude']);
     longtitude = double.parse(data['longitude']);
-
-
     if(latitude==0 || longtitude==0){
-
          Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
@@ -117,6 +111,8 @@ class Set_LocationState extends State<Set_Location> {
 
   @override
   Widget build(BuildContext context) {
+    double h = MediaQuery.of(context).size.height;
+    double w = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
@@ -127,8 +123,7 @@ class Set_LocationState extends State<Set_Location> {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : SingleChildScrollView(
-            child: Column(
+          :  Column(
                 children: [
                   Container(
                     height: MediaQuery.of(context).size.height * 0.5,
@@ -193,41 +188,51 @@ class Set_LocationState extends State<Set_Location> {
                     padding: EdgeInsets.all(7),
                     child: Column(
                       children: [
-                        TextField(
-                          keyboardType: TextInputType.number,
-                          controller: latcontroller,
-                          decoration: InputDecoration(
-                              labelText: "Kinh độ",
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15))),
+                        Container(
+                             height: h*0.07,
+                          child: TextField(
+                            keyboardType: TextInputType.number,
+                            controller: latcontroller,
+                            decoration: InputDecoration(
+                                labelText: "Kinh độ",
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15))),
+                          ),
                         ),
                         SizedBox(
                           height: 10,
                         ),
-                        TextField(
-                          keyboardType: TextInputType.number,
-                          controller: lngcontroller,
-                          decoration: InputDecoration(
-                              labelText: "Vĩ độ",
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15))),
+                        Container(
+                          height: h*0.07,
+                          child: TextField(
+                            
+                            keyboardType: TextInputType.number,
+                            controller: lngcontroller,
+                            decoration: InputDecoration(
+                                labelText: "Vĩ độ",
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15))),
+                          ),
                         ),
                                  SizedBox(
                           height: 10,
                         ),
-                         TextField(
-                          keyboardType: TextInputType.number,
-                          controller: metercontroller,
-                          decoration: InputDecoration(
-                              labelText: "Phạm vi điểm danh (đơn vị mét)",
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15))),
-                        ),
+                         Container(
+                             height: h*0.07,
+                           child: TextField(
+                            keyboardType: TextInputType.number,
+                            controller: metercontroller,
+                            decoration: InputDecoration(
+                                labelText: "Phạm vi điểm danh (đơn vị mét)",
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15))),
+                                                 ),
+                         ),
                       ],
                     ),
                   ),
                   MaterialButton(
-                    height: 40,
+                    height: 45,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15)),
                     minWidth: 200,
@@ -279,7 +284,7 @@ class Set_LocationState extends State<Set_Location> {
                   )
                 ],
               ),
-          ),
+          
     );
   }
 

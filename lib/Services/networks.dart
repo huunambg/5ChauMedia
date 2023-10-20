@@ -81,8 +81,14 @@ class NetworkRequest {
 
   Future getLocation_Admin(String? id) async {
     final response = await http.get(Uri.parse('$URL_GETLOCATION_ADMIN/$id'));
-    print(jsonDecode(response.body)['personnel']);
-    return jsonDecode(response.body)['personnel'];
+
+    if (response.statusCode == 200) {
+      print(
+          "List_Location ${List.from(jsonDecode(response.body)['personnel'])}");
+      return jsonDecode(response.body)['personnel'];
+    } else {
+      return [];
+    }
   }
 
   Future update_Location_Admin(String? id, String? name, String? lat,
@@ -124,7 +130,7 @@ class NetworkRequest {
     final response = await http.get(Uri.parse('$URL_GET_NOTIFICATION/$id'));
 
     if (response.statusCode == 200) {
-      //   print(List.from(jsonDecode(response.body)['data'].reversed.toList()));
+      print("fetchData_Notification: ${jsonDecode(response.body)['data']}");
       return List.from(jsonDecode(response.body)['data'].reversed.toList());
     } else if (response.statusCode == 404) {
       return [];
@@ -271,6 +277,36 @@ class NetworkRequest {
         });
     print("Edit Profile :${response.statusCode}");
     if (response.statusCode == 200) {
+      return "Success";
+    } else {
+      return "Error";
+    }
+  }
+
+  Future<dynamic> check_company_id(String? id) async {
+    final response = await http.get(Uri.parse('${URL_CHECK_ID_COMPANY}$id'));
+    print("${URL_CHECK_ID_COMPANY}$id: ${response.statusCode}");
+    if (response.statusCode == 200) {
+      print("check_company_id: ${jsonDecode(response.body)['department']}");
+      return jsonDecode(response.body)['department'];
+    } else {
+      return "Error";
+    }
+  }
+
+  Future<String> register_personnel(String? name, String? phone, String? email,
+      String? password, String? department_id) async {
+    final response =
+        await http.post(Uri.parse('${URL_REGISTER_PERSONNEL}'), body: {
+      "name": name,
+      "phone": phone,
+      "email": email,
+      "password": password,
+      "department_id": department_id
+    });
+    print("${URL_REGISTER_PERSONNEL}: ${response.statusCode}");
+    if (response.statusCode == 200) {
+      print("check_company_id: SUCCRESS");
       return "Success";
     } else {
       return "Error";
